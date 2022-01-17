@@ -3,12 +3,13 @@
              x:Class="App.MainPage"
              BackgroundColor="{DynamicResource SecondaryColor}">
 
+
     <ScrollView>
         <Grid RowSpacing="25" RowDefinitions="Auto,Auto,Auto,Auto,*"
               Padding="{OnPlatform iOS='30,60,30,30', Default='30'}">
 
             <Label 
-                Text="Hello, World!"
+                Text="Keyword Expansion"
                 Grid.Row="0"
                 SemanticProperties.HeadingLevel="Level1"
                 FontSize="32"
