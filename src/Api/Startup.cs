@@ -68,7 +68,7 @@ public class Startup
 
         browserWindow.OnReadyToShow += () => browserWindow.Show();
         browserWindow.SetTitle("Keyword Expansion");
-        //browserWindow.RemoveMenu();
+        browserWindow.RemoveMenu();
         browserWindow.LoadURL("https://localhost:3000/");
     }
 }
