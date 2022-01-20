@@ -22,6 +22,13 @@ public class KeywordConfiguration : IEntityTypeConfiguration<Keyword>
         builder.Property(k => k.Ranking)
             .IsRequired();
 
+        builder.Property(k => k.Timestamp)
+            .HasConversion(
+                k => k.Ticks,
+                k => new DateTime(k)
+                )
+            .IsRequired();
+
         builder.Ignore(k => k.DomainEvents);
     }
 }

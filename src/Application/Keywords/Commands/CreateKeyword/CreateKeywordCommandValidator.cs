@@ -14,5 +14,8 @@ public class CreateKeywordCommandValidator : AbstractValidator<CreateKeywordComm
 
         RuleFor(k => k.Ranking)
             .GreaterThanOrEqualTo(0);
+
+        RuleFor(k => k.Timestamp)
+            .NotEmpty();
     }
 }

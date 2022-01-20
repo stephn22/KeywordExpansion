@@ -9,6 +9,7 @@ public class CreateKeywordCommand : IRequest<Keyword>
     public string Value { get; set; }
     public string Culture { get; set; }
     public int Ranking { get; set; }
+    public DateTime Timestamp { get; set; }
 }
 
 public class CreateKeywordCommandHandler : IRequestHandler<CreateKeywordCommand, Keyword>
@@ -27,6 +28,7 @@ public class CreateKeywordCommandHandler : IRequestHandler<CreateKeywordCommand,
             Value = request.Value,
             Culture = request.Culture,
             Ranking = request.Ranking,
+            Timestamp = request.Timestamp
         };
 
         _context.Keywords.Add(entity);

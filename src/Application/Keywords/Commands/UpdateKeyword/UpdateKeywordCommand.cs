@@ -11,6 +11,7 @@ public class UpdateKeywordCommand : IRequest
     public string Value { get; set; }
     public string Culture { get; set; }
     public int Ranking { get; set; }
+    public DateTime Timestamp { get; set; }
 }
 
 public class UpdateKeywordCommandHandler : IRequestHandler<UpdateKeywordCommand>
@@ -34,6 +35,7 @@ public class UpdateKeywordCommandHandler : IRequestHandler<UpdateKeywordCommand>
         entity.Value = request.Value;
         entity.Culture = request.Culture;
         entity.Ranking = request.Ranking;
+        entity.Timestamp = request.Timestamp;
 
         await _context.SaveChangesAsync(cancellationToken);
 

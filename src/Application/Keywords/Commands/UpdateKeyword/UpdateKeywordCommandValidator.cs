@@ -14,5 +14,8 @@ public class UpdateKeywordCommandValidator : AbstractValidator<UpdateKeywordComm
 
         RuleFor(k => k.Culture)
             .NotEmpty();
+
+        RuleFor(k => k.Timestamp)
+            .NotEmpty();
     }
 }

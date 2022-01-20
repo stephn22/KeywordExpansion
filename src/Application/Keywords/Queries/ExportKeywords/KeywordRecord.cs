@@ -8,4 +8,5 @@ public class KeywordRecord : IMapFrom<Keyword>
     public string Value { get; set; }
     public string Culture { get; set; }
     public int Ranking { get; set; }
+    public DateTime DateTime { get; set; } // TODO: check
 }

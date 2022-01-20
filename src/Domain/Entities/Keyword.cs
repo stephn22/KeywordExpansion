@@ -21,5 +21,7 @@ public class Keyword : AuditableEntity, IHasDomainEvent
     /// </summary>
     public int Ranking { get; set; }
 
+    public DateTime Timestamp { get; set; }
+
     public List<DomainEvent> DomainEvents { get; set; } = new();
 }
