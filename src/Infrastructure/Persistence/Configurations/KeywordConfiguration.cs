@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.Constants;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,7 +10,7 @@ public class KeywordConfiguration : IEntityTypeConfiguration<Keyword>
     public void Configure(EntityTypeBuilder<Keyword> builder)
     {
         builder.Property(k => k.Value)
-            .HasMaxLength(8000)
+            .HasMaxLength(KeywordConstants.MaxLength)
             .IsRequired();
 
         builder.HasIndex(k => k.Value)
@@ -20,6 +21,7 @@ public class KeywordConfiguration : IEntityTypeConfiguration<Keyword>
             .IsRequired();
 
         builder.Property(k => k.Ranking)
+            .HasDefaultValue(0)
             .IsRequired();
 
         builder.Property(k => k.Timestamp)

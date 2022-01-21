@@ -9,16 +9,17 @@ public class CreateKeywordCommand : IRequest<Keyword>
     public string Value { get; set; }
     public string Culture { get; set; }
     public int Ranking { get; set; }
-    public DateTime Timestamp { get; set; }
 }
 
 public class CreateKeywordCommandHandler : IRequestHandler<CreateKeywordCommand, Keyword>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IDateTime _dateTime;
 
-    public CreateKeywordCommandHandler(IApplicationDbContext context)
+    public CreateKeywordCommandHandler(IApplicationDbContext context, IDateTime dateTime)
     {
         _context = context;
+        _dateTime = dateTime;
     }
 
     public async Task<Keyword> Handle(CreateKeywordCommand request, CancellationToken cancellationToken)
@@ -28,10 +29,13 @@ public class CreateKeywordCommandHandler : IRequestHandler<CreateKeywordCommand,
             Value = request.Value,
             Culture = request.Culture,
             Ranking = request.Ranking,
-            Timestamp = request.Timestamp
+            Timestamp = _dateTime.Now
         };
 
-        _context.Keywords.Add(entity);
+        if (!_context.Keywords.Contains(entity))
+        {
+            _context.Keywords.Add(entity);
+        }
 
         await _context.SaveChangesAsync(cancellationToken);
 
