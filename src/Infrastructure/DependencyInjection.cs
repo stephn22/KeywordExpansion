@@ -15,7 +15,7 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseSqlite(configuration.GetConnectionString("DefaultConnection"),
-                b => b.MigrationsAssembly("Api"));
+                b => b.MigrationsAssembly("App"));
         });
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());

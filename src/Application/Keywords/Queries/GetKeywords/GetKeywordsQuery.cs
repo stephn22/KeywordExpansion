@@ -7,7 +7,7 @@ namespace Application.Keywords.Queries.GetKeywords;
 
 public class GetKeywordsQuery : IRequest<IEnumerable<Keyword>>
 {
-    public int Id { get; set; }
+    public string? Culture { get; set; }
 }
 
 public class GetKeywordsQueryHandler : IRequestHandler<GetKeywordsQuery, IEnumerable<Keyword>>
@@ -21,6 +21,13 @@ public class GetKeywordsQueryHandler : IRequestHandler<GetKeywordsQuery, IEnumer
 
     public async Task<IEnumerable<Keyword>> Handle(GetKeywordsQuery request, CancellationToken cancellationToken)
     {
-        return await _context.Keywords.Where(k => k.Id == request.Id).ToListAsync(cancellationToken);
+        if (!string.IsNullOrEmpty(request.Culture))
+        {
+            return await _context.Keywords.Where(k => k.Culture == request.Culture).ToListAsync(cancellationToken);
+        }
+        else
+        {
+            return await _context.Keywords.ToListAsync(cancellationToken);
+        }
     }
 }

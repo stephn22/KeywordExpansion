@@ -107,7 +107,7 @@ public abstract class SuggestApi : ISuggestApi
         {
             var suggestions = await GetSuggestions(seed, language, country, _seedLength);
 
-            await Parallel.ForEachAsync(suggestions, _parallelOptions, async (suggestion, _) =>
+            await Parallel.ForEachAsync(suggestions, _parallelOptions, async (suggestion, cancellationToken) =>
             {
                 if (!_keywordsBag.Contains(suggestion))
                 {
@@ -118,7 +118,7 @@ public abstract class SuggestApi : ISuggestApi
                         Value = suggestion,
                         Culture = $"{language}-{country}",
                         Ranking = 0
-                    });
+                    }, cancellationToken);
 
                     await GetKeywords(suggestion, language, country, depth - 1);
                 }

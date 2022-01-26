@@ -1,0 +1,41 @@
+﻿@page
+@model App.Pages.SuggestModel
+@{
+    ViewData["Title"] = "Suggest";
+}
+
+<div id="suggest-list" class="list-group">
+    <a class="list-group-item list-group-item-action" href="#google-section">Google Suggest</a>
+    <a class="list-group-item list-group-item-action" href="#bing-section">Bing Suggest</a>
+    <a class="list-group-item list-group-item-action" href="#duckduckgo-section">DuckDuckGo Suggest</a>
+</div>
+<div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" class="scrollspy-example" tabindex="0">
+    <h4 id="google-section">Google Suggest</h4>
+    
+    <form >
+        <div class="form-floating mb-1">
+            <input type="text" class="form-control" id="keyword" name="keyword" placeholder="Keyword" required>
+            <label for="keyword">Keyword</label>
+        </div>
+    </form>
+    
+    <button id="google-suggest-btn" class="btn btn-outline-primary">
+        Google Suggest
+    </button>
+    
+    <table>
+
+    </table>
+    
+    <hr class="dropdown-divider" />
+
+    <h4 id="bing-section">Bing Suggest</h4>
+    
+    <h4 id="duckduckgo-section">DuckDuckGo Suggest</h4>
+
+</div>
+
+@section Scripts
+{
+    <script src="/js/suggest.js"></script>
+}
