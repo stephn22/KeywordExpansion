@@ -9,6 +9,7 @@ public class CreateKeywordCommand : IRequest<Keyword>
     public string Value { get; set; }
     public string Culture { get; set; }
     public int Ranking { get; set; }
+    public string SuggestService { get; set; }
 }
 
 public class CreateKeywordCommandHandler : IRequestHandler<CreateKeywordCommand, Keyword>
@@ -29,7 +30,8 @@ public class CreateKeywordCommandHandler : IRequestHandler<CreateKeywordCommand,
             Value = request.Value,
             Culture = request.Culture,
             Ranking = request.Ranking,
-            Timestamp = _dateTime.Now
+            Timestamp = _dateTime.Now,
+            SuggestService = request.SuggestService
         };
 
         if (!_context.Keywords.Contains(entity))

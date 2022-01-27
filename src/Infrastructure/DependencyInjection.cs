@@ -2,6 +2,7 @@
 using Infrastructure.File;
 using Infrastructure.Persistence;
 using Infrastructure.Services;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

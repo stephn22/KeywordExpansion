@@ -17,5 +17,8 @@ public class UpdateKeywordCommandValidator : AbstractValidator<UpdateKeywordComm
 
         RuleFor(k => k.Timestamp)
             .NotEmpty();
+
+        RuleFor(k => k.SuggestService)
+            .NotEmpty();
     }
 }

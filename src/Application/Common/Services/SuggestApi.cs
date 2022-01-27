@@ -117,7 +117,8 @@ public abstract class SuggestApi : ISuggestApi
                     {
                         Value = suggestion,
                         Culture = $"{language}-{country}",
-                        Ranking = 0
+                        Ranking = 0,
+                        SuggestService = nameof(GetType)
                     }, cancellationToken);
 
                     await GetKeywords(suggestion, language, country, depth - 1);

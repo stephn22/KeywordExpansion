@@ -21,7 +21,15 @@ public class Keyword : AuditableEntity, IHasDomainEvent
     /// </summary>
     public int Ranking { get; set; }
 
+    /// <summary>
+    /// Data e ora di quando la keyword è stata scoperta
+    /// </summary>
     public DateTime Timestamp { get; set; }
+
+    /// <summary>
+    /// Servizio di suggest utilizzato (Google, Bing, DuckDuckGo)
+    /// </summary>
+    public string SuggestService { get; set; }
 
     public List<DomainEvent> DomainEvents { get; set; } = new();
 }

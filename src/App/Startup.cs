@@ -1,8 +1,10 @@
-﻿using Application;
+﻿using System.Reflection;
+using Application;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
 using FluentValidation.AspNetCore;
 using Infrastructure;
+using MediatR;
 
 namespace App;
 
@@ -43,7 +45,6 @@ public class Startup
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
-        app.UseResponseCaching();
 
         app.UseEndpoints(endpoints =>
         {
@@ -64,7 +65,8 @@ public class Startup
             MinHeight = 600,
             MinWidth = 200,
             Center = true,
-            Show = false
+            Show = false,
+            Icon = @"\wwwroot\pictures\graph-up.svg"
         });
 
         await browserWindow.WebContents.Session.ClearCacheAsync();

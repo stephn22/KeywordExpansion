@@ -4,38 +4,106 @@
     ViewData["Title"] = "Suggest";
 }
 
-<div id="suggest-list" class="list-group">
-    <a class="list-group-item list-group-item-action" href="#google-section">Google Suggest</a>
-    <a class="list-group-item list-group-item-action" href="#bing-section">Bing Suggest</a>
-    <a class="list-group-item list-group-item-action" href="#duckduckgo-section">DuckDuckGo Suggest</a>
-</div>
-<div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-offset="0" class="scrollspy-example" tabindex="0">
-    <h4 id="google-section">Google Suggest</h4>
-    
-    <form >
-        <div class="form-floating mb-1">
-            <input type="text" class="form-control" id="keyword" name="keyword" placeholder="Keyword" required>
-            <label for="keyword">Keyword</label>
-        </div>
-    </form>
-    
-    <button id="google-suggest-btn" class="btn btn-outline-primary">
-        Google Suggest
+<form method="post">
+    <h4>Seleziona in che modo generare le keyword</h4>
+    <div class="form-check">
+        <input class="form-check-input radio-btn" name="suggest-generation-type" type="radio" id="keyword-radio" checked />
+        <label class="form-check-label" for="keyword-radio">Keyword</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input radio-btn" name="suggest-generation-type" type="radio" id="file-radio" />
+        <label class="form-check-label" for="file-radio">File</label>
+    </div>
+    <hr />
+    <div class="form-floating col-4 mb-2">
+        <input type="text" class="form-control" id="keyword" asp-for="Input.Keyword" placeholder="Keyword" required>
+        <label for="keyword">Keyword</label>
+        <small class="small invalid-feedback" id="keyword-invalid-feedback"></small>
+    </div>
+    <div class="form-group col-4 mb-2">
+        <label for="keyword">File</label>
+        <input type="file" class="form-control" id="file" asp-for="Input.File" placeholder="File" required>
+        <small class="small invalid-feedback" id="file-invalid-feedback"></small>
+    </div>
+    <hr />
+    <div class="form-check form-switch">
+        <input class="form-check-input switch" type="checkbox" id="google-suggest" />
+        <label class="form-check-label" for="google-suggest">Google Suggest</label>
+    </div>
+    <div class="form-check form-switch">
+        <input class="form-check-input switch" type="checkbox" id="bing-suggest" />
+        <label class="form-check-label" for="bing-suggest">Bing Suggest</label>
+    </div>
+    <div class="form-check form-switch">
+        <input class="form-check-input switch" type="checkbox" id="duckduckgo-suggest" />
+        <label class="form-check-label" for="duckduckgo-suggest">DuckDuckGo Suggest</label>
+    </div>
+    <hr />
+    <button type="submit" class="btn btn-outline-primary" id="submit-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89.471-1.178-1.178.471L5.93 9.363l.338.215a.5.5 0 0 1 .154.154l.215.338 7.494-7.494Z" />
+        </svg>
+        Invia
     </button>
-    
-    <table>
+</form>
+<hr />
 
+@if (Model.Keywords.Any())
+{
+    <table class="table">
+        <thead>
+        <tr class="table-primary">
+            <th>
+                @Html.DisplayNameFor(m => m.Keywords[0].Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Keywords[0].Value)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Keywords[0].Culture)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Keywords[0].Ranking)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Keywords[0].Timestamp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Keywords[0].SuggestService)
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach (var keyword in Model.Keywords)
+            {
+                <tr>
+                    <td>
+                        @keyword.Id
+                    </td>
+                    <td>
+                        @keyword.Value
+                    </td>
+                    <td>
+                        @keyword.Culture
+                    </td>
+                    <td>
+                        @keyword.Ranking
+                    </td>
+                    <td>
+                        @keyword.Timestamp.ToLocalTime()
+                    </td>
+                    <td>
+                        @keyword.SuggestService
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
-    
-    <hr class="dropdown-divider" />
+}
 
-    <h4 id="bing-section">Bing Suggest</h4>
-    
-    <h4 id="duckduckgo-section">DuckDuckGo Suggest</h4>
 
-</div>
 
 @section Scripts
 {
-    <script src="/js/suggest.js"></script>
+<script src="/js/suggest.js"></script>
 }
