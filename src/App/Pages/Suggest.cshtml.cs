@@ -1,14 +1,17 @@
+using System.ComponentModel.DataAnnotations;
+using App.Util;
 using Application.Common.Interfaces;
-using Application.Common.Services.BingSuggest;
-using Application.Common.Services.DuckDuckGoSuggest;
-using Application.Common.Services.GoogleSuggest;
 using Application.Keywords.Queries.GetKeywords;
 using Domain.Constants;
 using Domain.Entities;
 using Infrastructure.File;
+using Infrastructure.Services.BingSuggest;
+using Infrastructure.Services.DuckDuckGoSuggest;
+using Infrastructure.Services.GoogleSuggest;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.Sqlite;
 
 namespace App.Pages;
@@ -29,6 +32,8 @@ public class SuggestModel : PageModel
     [BindProperty]
     public InputModel Input { get; set; }
 
+    public SelectList Cultures => new(Utilities.CultureList(), "Key", "Value");
+
     public class InputModel
     {
         public string Keyword { get; set; }
@@ -36,6 +41,8 @@ public class SuggestModel : PageModel
         public bool IsGoogleSuggest { get; set; }
         public bool IsBingSuggest { get; set; }
         public bool IsDuckDuckGoSuggest { get; set; }
+        public string Culture { get; set; }
+        public int Depth { get; set; } = 1;
     }
 
     public IEnumerable<Keyword> Keywords { get; set; }
@@ -89,7 +96,9 @@ public class SuggestModel : PageModel
 
         if (!string.IsNullOrEmpty(Input.Keyword))
         {
-            await _suggestApi.Suggest(5, Input.Keyword, "it", "it");
+            var language = Input.Culture[..Input.Culture.IndexOf('-')];
+            var country = Input.Culture[Input.Culture.IndexOf('-')..];
+            await _suggestApi.Suggest(5, Input.Keyword, language, country);
         }
         else if (!string.IsNullOrEmpty(Input.File))
         {

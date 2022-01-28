@@ -14,6 +14,11 @@ const fileRadio = document.getElementById('file-radio');
 const keyword = document.getElementById('keyword');
 
 /**
+ * @type {HTMLSelectElement}
+ */
+const selectCulture = document.getElementById('select-culture');
+
+/**
  * @type {HTMLInputElement}
  */
 const file = document.getElementById('file');
@@ -56,10 +61,12 @@ keywordRadio.addEventListener('change', () => {
     if (keywordRadio.checked) {
         clearInput(file);
         enableInput(keyword);
+        enableInput(selectCulture);
         disableInput(file);
     } else {
         clearInput(keyword);
         disableInput(keyword);
+        disableInput(selectCulture);
         enableInput(file);
     }
 });
@@ -69,10 +76,12 @@ fileRadio.addEventListener('change', () => {
         clearInput(keyword);
         enableInput(file);
         disableInput(keyword);
+        disableInput(selectCulture);
     } else {
         clearInput(file);
         disableInput(file);
         enableInput(keyword);
+        enableInput(selectCulture);
     }
 });
 
