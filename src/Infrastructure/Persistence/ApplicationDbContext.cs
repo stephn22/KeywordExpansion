@@ -18,7 +18,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         _domainEventService = domainEventService;
     }
 
-    public DbSet<Keyword> Keywords => Set<Keyword>();
+    public DbSet<Keyword> Keywords { get; set; }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
@@ -36,20 +36,11 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
                 case EntityState.Deleted:
                     entry.Entity.Deleted = _dateTime.Now;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
 
-        var events = ChangeTracker.Entries<IHasDomainEvent>()
-            .Select(x => x.Entity.DomainEvents)
-            .SelectMany(x => x)
-            .Where(domainEvent => !domainEvent.IsPublished)
-            .ToArray();
-
         var result = await base.SaveChangesAsync(cancellationToken);
 
-        await DispatchEvents(events);
 
         return result;
     }
@@ -58,14 +49,5 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(modelBuilder);
-    }
-
-    private async Task DispatchEvents(IEnumerable<DomainEvent> events)
-    {
-        foreach (var @event in events)
-        {
-            @event.IsPublished = true;
-            await _domainEventService.Publish(@event);
-        }
     }
 }

@@ -8,18 +8,14 @@ namespace Application.Common.Services.BingSuggest;
 
 public class BingSuggestApi : SuggestApi
 {
-    private readonly ILogger<BingSuggestApi> _logger;
 
     public BingSuggestApi(
-        ILogger<BingSuggestApi> logger,
         int seedLength,
         ICsvFileReader csvFileReader,
         IMediator mediator,
         string? filePath = null)
         : base(seedLength, csvFileReader, mediator, filePath)
-    {
-        _logger = logger;
-    }
+    { }
 
     public override async Task<IEnumerable<string>> GetSuggestions(string seed, string language, string country, int seedLength)
     {
@@ -33,7 +29,6 @@ public class BingSuggestApi : SuggestApi
 
         if (!response.IsSuccessStatusCode)
         {
-            _logger.LogWarning("STATUS: {@StatusCode}", response.StatusCode);
 
             if (response.StatusCode == HttpStatusCode.TooManyRequests)
             {

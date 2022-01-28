@@ -2,7 +2,7 @@
 
 namespace Domain.Entities;
 
-public class Keyword : AuditableEntity, IHasDomainEvent
+public class Keyword
 {
     public int Id { get; set; }
 
@@ -30,6 +30,4 @@ public class Keyword : AuditableEntity, IHasDomainEvent
     /// Servizio di suggest utilizzato (Google, Bing, DuckDuckGo)
     /// </summary>
     public string SuggestService { get; set; }
-
-    public List<DomainEvent> DomainEvents { get; set; } = new();
 }

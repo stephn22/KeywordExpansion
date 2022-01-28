@@ -22,6 +22,9 @@ public class Startup
         services.AddApplication();
         services.AddInfrastructure(Configuration);
 
+        services.AddDatabaseDeveloperPageExceptionFilter();
+
+
         services.AddRazorPages()
             .AddRazorRuntimeCompilation()
             .AddFluentValidation();
@@ -31,6 +34,7 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IHostEnvironment env)
     {
+        env.EnvironmentName = "Development";
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -54,11 +58,11 @@ public class Startup
 
         if (HybridSupport.IsElectronActive)
         {
-            ElectronBootstrap();
+            ElectronBootstrap(env);
         }
     }
 
-    private async void ElectronBootstrap()
+    private async void ElectronBootstrap(IHostEnvironment env)
     {
         var browserWindow = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions
         {
@@ -74,7 +78,12 @@ public class Startup
         browserWindow.OnReadyToShow += () => browserWindow.Show();
         browserWindow.SetTitle("Keyword Expansion");
         browserWindow.Maximize();
-        //browserWindow.RemoveMenu();
+
+        if (!env.IsDevelopment())
+        {
+            browserWindow.RemoveMenu();
+        }
+
         browserWindow.LoadURL("http://localhost:8000/");
     }
 }

@@ -13,9 +13,6 @@ public class KeywordConfiguration : IEntityTypeConfiguration<Keyword>
             .HasMaxLength(KeywordConstants.MaxLength)
             .IsRequired();
 
-        builder.HasIndex(k => k.Value)
-            .IsUnique();
-
         builder.Property(k => k.Culture)
             .HasMaxLength(5)
             .IsRequired();
@@ -30,7 +27,5 @@ public class KeywordConfiguration : IEntityTypeConfiguration<Keyword>
                 k => new DateTime(k)
                 )
             .IsRequired();
-
-        builder.Ignore(k => k.DomainEvents);
     }
 }

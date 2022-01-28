@@ -11,13 +11,11 @@ public class GoogleSuggestApi : SuggestApi
     private readonly string _username;
     private readonly string _password;
     private readonly string _proxyAddress;
-    private readonly ILogger<GoogleSuggestApi> _logger;
 
     public GoogleSuggestApi(
         string username,
         string password,
         string proxyAddress,
-        ILogger<GoogleSuggestApi> logger,
         int seedLength,
         ICsvFileReader csvFileReader,
         IMediator mediator,
@@ -27,7 +25,6 @@ public class GoogleSuggestApi : SuggestApi
         _username = username;
         _password = password;
         _proxyAddress = proxyAddress;
-        _logger = logger;
     }
 
 
@@ -53,8 +50,6 @@ public class GoogleSuggestApi : SuggestApi
 
         if (!response.IsSuccessStatusCode)
         {
-            _logger.LogWarning("STATUS: {@StatusCode}", response.StatusCode);
-
             if (response.StatusCode == HttpStatusCode.TooManyRequests)
             {
                 TooManyRequestsCounter++;
