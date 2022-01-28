@@ -6,14 +6,9 @@ public static class Utilities
 {
     public static IEnumerable<KeyValuePair<string, string>> CultureList()
     {
-        var cultureList = new Dictionary<string, string>();
-
         var cultureInfo = CultureInfo.GetCultures(CultureTypes.SpecificCultures);
 
-        foreach (var c in cultureInfo)
-        {
-            cultureList.Add(c.Name, c.DisplayName);
-        }
+        var cultureList = cultureInfo.ToDictionary(c => c.Name, c => c.DisplayName);
 
         return cultureList.OrderBy(p => p.Value);
     }

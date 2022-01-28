@@ -1,13 +1,12 @@
-using System.ComponentModel.DataAnnotations;
 using App.Util;
 using Application.Common.Interfaces;
+using Application.Common.Services.BingSuggest;
+using Application.Common.Services.DuckDuckGoSuggest;
+using Application.Common.Services.GoogleSuggest;
 using Application.Keywords.Queries.GetKeywords;
 using Domain.Constants;
 using Domain.Entities;
 using Infrastructure.File;
-using Infrastructure.Services.BingSuggest;
-using Infrastructure.Services.DuckDuckGoSuggest;
-using Infrastructure.Services.GoogleSuggest;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

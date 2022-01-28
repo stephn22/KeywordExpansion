@@ -26,7 +26,7 @@
         </select>
     </div>
     <hr />
-    <div class="form-group col-4 mb-2">
+    <div class="form-group col-4 mb-2" data-bs-toggle="popover" data-bs-trigger="hover focus" title="Formato file CSV" data-bs-content="Il formato delle colonne del file CSV deve essere del tipo (id, keyword, country, lang)">
         <label for="keyword">File</label>
         <input type="file" class="form-control" id="file" asp-for="Input.File" placeholder="File" required>
         <small class="small invalid-feedback" id="file-invalid-feedback"></small>
