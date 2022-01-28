@@ -26,6 +26,6 @@ public class GetKeywordsQueryHandler : IRequestHandler<GetKeywordsQuery, IEnumer
             return await _context.Keywords.Where(k => k.Culture == request.Culture).ToListAsync(cancellationToken);
         }
 
-        return await _context.Keywords.ToListAsync(cancellationToken);
+        return await _context.Keywords.Select(k => k).ToListAsync(cancellationToken);
     }
 }

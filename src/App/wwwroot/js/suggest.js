@@ -50,6 +50,8 @@ disableBtn(submitBtn);
 enableInput(keyword);
 disableInput(file);
 
+let switchesChecked = false; // TODO: completare
+
 keywordRadio.addEventListener('change', () => {
     if (keywordRadio.checked) {
         clearInput(file);
@@ -100,11 +102,13 @@ file.addEventListener('input', () => {
 
 for (let i = 0; i < switchs.length; i++) {
     switchs[i].addEventListener('change', () => {
-        if (switchs[i].checked) {
+        if (switchs[i].checked && keyword.length > 0) {
             enableBtn(submitBtn);
+            switchesChecked = true;
         }
         if (!googleSuggest.checked && !bingSuggest.checked && !duckDuckGoSuggest.checked) {
             disableBtn(submitBtn);
+            switchesChecked = false;
         }
     });
 }

@@ -34,10 +34,7 @@ public class CreateKeywordCommandHandler : IRequestHandler<CreateKeywordCommand,
             SuggestService = request.SuggestService
         };
 
-        if (!_context.Keywords.Contains(entity))
-        {
-            _context.Keywords.Add(entity);
-        }
+        _context.Keywords.Add(entity);
 
         await _context.SaveChangesAsync(cancellationToken);
 

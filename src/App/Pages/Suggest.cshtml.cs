@@ -1,21 +1,29 @@
+using Application.Common.Interfaces;
+using Application.Common.Services.BingSuggest;
+using Application.Common.Services.DuckDuckGoSuggest;
+using Application.Common.Services.GoogleSuggest;
 using Application.Keywords.Queries.GetKeywords;
+using Domain.Constants;
 using Domain.Entities;
-using Infrastructure.Persistence;
+using Infrastructure.File;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Data.Sqlite;
 
 namespace App.Pages;
 
 public class SuggestModel : PageModel
 {
-    private readonly ApplicationDbContext _context;
-    private readonly Mediator _mediator;
+    private readonly IMediator _mediator;
+    private ISuggestApi _suggestApi;
+    private readonly IConfiguration _configuration;
+    private readonly ILogger<SuggestModel> _logger;
 
-    public SuggestModel(ApplicationDbContext context, Mediator mediator)
+    public SuggestModel(IMediator mediator, IConfiguration configuration)
     {
-        _context = context;
         _mediator = mediator;
+        _configuration = configuration;
     }
 
     [BindProperty]
@@ -25,23 +33,67 @@ public class SuggestModel : PageModel
     {
         public string Keyword { get; set; }
         public string File { get; set; }
+        public bool IsGoogleSuggest { get; set; }
+        public bool IsBingSuggest { get; set; }
+        public bool IsDuckDuckGoSuggest { get; set; }
     }
 
-    public IList<Keyword> Keywords { get; set; }
+    public IEnumerable<Keyword> Keywords { get; set; }
 
     public async Task<IActionResult> OnGetAsync()
     {
-        var keywords = await _mediator.Send(new GetKeywordsQuery());
-        Keywords = keywords.ToList();
+        try
+        {
+            var keywords = await _mediator.Send(new GetKeywordsQuery());
+            Keywords = keywords.ToList();
+        }
+        catch (SqliteException)
+        {
+            Keywords = new List<Keyword>();
+        }
 
         return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!ModelState.IsValid)
+        if (Input.IsGoogleSuggest)
         {
-            return BadRequest();
+            _suggestApi = new GoogleSuggestApi(
+                _configuration["WebShare:Username"],
+                _configuration["WebShare:Password"],
+                _configuration["WebShare:ProxyAddress"],
+                KeywordConstants.MaxLength,
+                new CsvFileReader(),
+                _mediator,
+                string.IsNullOrEmpty(Input.File) ? null : Input.File);
+        }
+
+        if (Input.IsBingSuggest)
+        {
+            _suggestApi = new BingSuggestApi(
+                KeywordConstants.MaxLength,
+                new CsvFileReader(),
+                _mediator,
+                string.IsNullOrEmpty(Input.File) ? null : Input.File);
+        }
+
+        if (Input.IsDuckDuckGoSuggest)
+        {
+            _suggestApi = new DuckDuckGoSuggestApi(
+                KeywordConstants.MaxLength,
+                new CsvFileReader(),
+                _mediator,
+                string.IsNullOrEmpty(Input.File) ? null : Input.File);
+        }
+
+        if (!string.IsNullOrEmpty(Input.Keyword))
+        {
+            await _suggestApi.Suggest(5, Input.Keyword, "it", "it");
+        }
+        else if (!string.IsNullOrEmpty(Input.File))
+        {
+            await _suggestApi.Suggest(5);
         }
 
         return Page();

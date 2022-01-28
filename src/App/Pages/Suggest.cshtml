@@ -27,15 +27,15 @@
     </div>
     <hr />
     <div class="form-check form-switch">
-        <input class="form-check-input switch" type="checkbox" id="google-suggest" />
+        <input class="form-check-input switch" type="checkbox" asp-for="Input.IsGoogleSuggest" id="google-suggest" />
         <label class="form-check-label" for="google-suggest">Google Suggest</label>
     </div>
     <div class="form-check form-switch">
-        <input class="form-check-input switch" type="checkbox" id="bing-suggest" />
+        <input class="form-check-input switch" type="checkbox" asp-for="Input.IsBingSuggest" id="bing-suggest" />
         <label class="form-check-label" for="bing-suggest">Bing Suggest</label>
     </div>
     <div class="form-check form-switch">
-        <input class="form-check-input switch" type="checkbox" id="duckduckgo-suggest" />
+        <input class="form-check-input switch" type="checkbox" asp-for="Input.IsDuckDuckGoSuggest" id="duckduckgo-suggest" />
         <label class="form-check-label" for="duckduckgo-suggest">DuckDuckGo Suggest</label>
     </div>
     <hr />
@@ -48,7 +48,7 @@
 </form>
 <hr />
 
-@if (Model.Keywords.Any())
+@*@if (Model.Keywords.Any())
 {
     <table class="table">
         <thead>
@@ -99,7 +99,7 @@
             }
         </tbody>
     </table>
-}
+}*@
 
 
 
