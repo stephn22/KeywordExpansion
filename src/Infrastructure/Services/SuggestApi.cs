@@ -35,6 +35,7 @@ public abstract class SuggestApi : ISuggestApi
 
     public async Task Suggest(int depth)
     {
+        Console.WriteLine("suggest");
         if (!string.IsNullOrEmpty(_filePath))
         {
             var records = _csvFileReader.ReadKeywordsFromFile(_filePath);
@@ -46,6 +47,7 @@ public abstract class SuggestApi : ISuggestApi
                 try
                 {
                     _parallelDegree++;
+                    Console.WriteLine("Getting keywords");
                     await GetKeywords(record.keyword, record.lang, record.country, depth);
                 }
                 catch (Exception e)
@@ -97,6 +99,7 @@ public abstract class SuggestApi : ISuggestApi
             });
         }
     }
+
     public async Task Suggest(int depth, string keyword, string language, string country)
     {
         await GetKeywords(keyword, language, country, depth);

@@ -1,6 +1,4 @@
 using App.Util;
-using Application.Keywords.Queries.GetKeywords;
-using Domain.Entities;
 using Infrastructure.Services.Driver.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

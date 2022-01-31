@@ -23,7 +23,7 @@ public static class ChromiumDriverExtensions
 
         // https://github.com/SeleniumHQ/selenium/issues/5189
         options.AddArgument("--disable-extensions");
-        options.AddArgument("--no-startup-window");
+        //options.AddArgument("--no-startup-window");
 
         return new EdgeDriver(options);
     }
@@ -32,13 +32,14 @@ public static class ChromiumDriverExtensions
     {
         var keywords = new ConcurrentBag<string>();
         var categories = new List<char> { 'b', 'e', 'm', 't', 's', 'h' };
-        var geo = culture['-'..].ToUpper(CultureInfo.InvariantCulture);
+        var geo = culture.Substring(culture.IndexOf('-') + 1).ToUpperInvariant();
+        var domain = geo.ToLowerInvariant();
 
         //while (true)
         //{
         foreach (var category in categories)
         {
-            var url = $"https://trends.google.it/trends/trendingsearches/realtime?geo={geo}&category={category}";
+            var url = $"https://trends.google.{domain}/trends/trendingsearches/realtime?geo={geo}&category={category}";
             driver.Navigate(url);
 
             // clicca per nascondere il div dei cookies (evita che catturi possibili click)

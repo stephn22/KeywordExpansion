@@ -5,12 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Keywords.Queries.GetKeywords;
 
-public class GetKeywordsQuery : IRequest<IEnumerable<Keyword>>
+public class GetKeywordsQuery : IRequest<IQueryable<Keyword>>
 {
-    public string? Culture { get; set; }
 }
 
-public class GetKeywordsQueryHandler : IRequestHandler<GetKeywordsQuery, IEnumerable<Keyword>>
+public class GetKeywordsQueryHandler : IRequestHandler<GetKeywordsQuery, IQueryable<Keyword>>
 {
     private readonly IApplicationDbContext _context;
 
@@ -19,13 +18,8 @@ public class GetKeywordsQueryHandler : IRequestHandler<GetKeywordsQuery, IEnumer
         _context = context;
     }
 
-    public async Task<IEnumerable<Keyword>> Handle(GetKeywordsQuery request, CancellationToken cancellationToken)
+    public Task<IQueryable<Keyword>> Handle(GetKeywordsQuery request, CancellationToken cancellationToken)
     {
-        if (!string.IsNullOrEmpty(request.Culture))
-        {
-            return await _context.Keywords.Where(k => k.Culture == request.Culture).ToListAsync(cancellationToken);
-        }
-
-        return await _context.Keywords.Select(k => k).ToListAsync(cancellationToken);
+        return Task.FromResult(_context.Keywords.Select(k => k));
     }
 }

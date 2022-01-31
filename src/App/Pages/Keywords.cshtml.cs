@@ -46,12 +46,10 @@ namespace App.Pages
             TimeStampSort = sortOrder == "TimeStamp" ? "timestamp_desc" : "TimeStamp";
             SuggestServiceSort = string.IsNullOrEmpty(sortOrder) ? "suggestservice_desc" : "";
 
-            var keywords = await _mediator.Send(new GetKeywordsQuery());
+            var keywordsIq = await _mediator.Send(new GetKeywordsQuery());
 
-            if (keywords.Any())
+            if (keywordsIq.Any())
             {
-                var keywordsIq = keywords as IQueryable<Keyword>;
-
                 switch (sortOrder)
                 {
                     case IdDesc:

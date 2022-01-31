@@ -1,8 +1,5 @@
 using App.Util;
-using Application.Common.Interfaces;
-using Application.Keywords.Queries.GetKeywords;
 using Domain.Constants;
-using Domain.Entities;
 using Infrastructure.File;
 using Infrastructure.Services.BingSuggest;
 using Infrastructure.Services.DuckDuckGoSuggest;
@@ -11,14 +8,12 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Data.Sqlite;
 
 namespace App.Pages;
 
 public class SuggestModel : PageModel
 {
     private readonly IMediator _mediator;
-    private ISuggestApi _suggestApi;
     private readonly IConfiguration _configuration;
     private readonly ILogger<SuggestModel> _logger;
 
@@ -52,7 +47,8 @@ public class SuggestModel : PageModel
     {
         if (Input.IsGoogleSuggest)
         {
-            _suggestApi = new GoogleSuggestApi(
+            _logger.LogInformation("Google suggest");
+            var suggestApiGoogle = new GoogleSuggestApi(
                 _configuration["WebShare:Username"],
                 _configuration["WebShare:Password"],
                 _configuration["WebShare:ProxyAddress"],
@@ -65,17 +61,17 @@ public class SuggestModel : PageModel
             {
                 var language = Input.Culture[..Input.Culture.IndexOf('-')];
                 var country = Input.Culture[Input.Culture.IndexOf('-')..];
-                await _suggestApi.Suggest(5, Input.Keyword, language, country);
+                await suggestApiGoogle.Suggest(5, Input.Keyword, language, country);
             }
             else if (!string.IsNullOrEmpty(Input.File))
             {
-                await _suggestApi.Suggest(5);
+                await suggestApiGoogle.Suggest(5);
             }
         }
 
         if (Input.IsBingSuggest)
         {
-            _suggestApi = new BingSuggestApi(
+            var suggestApiBing = new BingSuggestApi(
                 KeywordConstants.MaxLength,
                 new CsvFileReader(),
                 _mediator,
@@ -85,17 +81,17 @@ public class SuggestModel : PageModel
             {
                 var language = Input.Culture[..Input.Culture.IndexOf('-')];
                 var country = Input.Culture[Input.Culture.IndexOf('-')..];
-                await _suggestApi.Suggest(5, Input.Keyword, language, country);
+                await suggestApiBing.Suggest(5, Input.Keyword, language, country);
             }
             else if (!string.IsNullOrEmpty(Input.File))
             {
-                await _suggestApi.Suggest(5);
+                await suggestApiBing.Suggest(5);
             }
         }
 
         if (Input.IsDuckDuckGoSuggest)
         {
-            _suggestApi = new DuckDuckGoSuggestApi(
+            var suggestApiDuckDuckGo = new DuckDuckGoSuggestApi(
                 KeywordConstants.MaxLength,
                 new CsvFileReader(),
                 _mediator,
@@ -105,11 +101,11 @@ public class SuggestModel : PageModel
             {
                 var language = Input.Culture[..Input.Culture.IndexOf('-')];
                 var country = Input.Culture[Input.Culture.IndexOf('-')..];
-                await _suggestApi.Suggest(5, Input.Keyword, language, country);
+                await suggestApiDuckDuckGo.Suggest(5, Input.Keyword, language, country);
             }
             else if (!string.IsNullOrEmpty(Input.File))
             {
-                await _suggestApi.Suggest(5);
+                await suggestApiDuckDuckGo.Suggest(5);
             }
         }
 

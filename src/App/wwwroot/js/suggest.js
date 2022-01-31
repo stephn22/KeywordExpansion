@@ -127,6 +127,14 @@ for (let i = 0; i < switchs.length; i++) {
     });
 }
 
+submitBtn.addEventListener('click', () => {
+    disableBtn(submitBtn);
+    submitBtn.innerText = '';
+    submitBtn.innerHTML = `<div class="spinner-border spinner-border-sm text-primary" role="status">
+                               <span class="visually-hidden">Loading...</span>
+                           </div>`;
+});
+
 /**
  * 
  * @param {HTMLButtonElement} button 

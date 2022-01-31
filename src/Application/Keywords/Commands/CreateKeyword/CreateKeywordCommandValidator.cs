@@ -17,8 +17,5 @@ public class CreateKeywordCommandValidator : AbstractValidator<CreateKeywordComm
 
         RuleFor(k => k.SuggestService)
             .NotEmpty();
-
-        RuleFor(k => k.Context)
-            .NotEmpty();
     }
 }
