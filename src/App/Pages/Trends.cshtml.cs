@@ -1,6 +1,7 @@
 using App.Util;
 using Application.Keywords.Queries.GetKeywords;
 using Domain.Entities;
+using Infrastructure.Services.Driver.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -19,7 +20,6 @@ public class TrendsModel : PageModel
         _logger = logger;
     }
 
-    public IEnumerable<Keyword> Keywords { get; set; }
     public SelectList Cultures => new(Utilities.CultureList(), "Key", "Value");
 
     [BindProperty] public InputModel Input { get; set; }
@@ -29,8 +29,15 @@ public class TrendsModel : PageModel
         public string Culture { get; set; }
     }
 
-    public async Task<IActionResult> OnGetAsync()
+    public void OnGet()
     {
-        Keywords = await _mediator.Send(new GetKeywordsQuery());
+    }
+
+    public async Task<IActionResult> OnPostAsync()
+    {
+        using var driver = ChromiumDriverExtensions.GetChromiumDriver();
+        await driver.ExplorePage(_mediator, Input.Culture);
+
+        return RedirectToPage("/Keywords");
     }
 }

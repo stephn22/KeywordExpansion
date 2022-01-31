@@ -1,12 +1,12 @@
 using App.Util;
 using Application.Common.Interfaces;
-using Application.Common.Services.BingSuggest;
-using Application.Common.Services.DuckDuckGoSuggest;
-using Application.Common.Services.GoogleSuggest;
 using Application.Keywords.Queries.GetKeywords;
 using Domain.Constants;
 using Domain.Entities;
 using Infrastructure.File;
+using Infrastructure.Services.BingSuggest;
+using Infrastructure.Services.DuckDuckGoSuggest;
+using Infrastructure.Services.GoogleSuggest;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -44,21 +44,8 @@ public class SuggestModel : PageModel
         public int Depth { get; set; } = 1;
     }
 
-    public IEnumerable<Keyword> Keywords { get; set; }
-
-    public async Task<IActionResult> OnGetAsync()
+    public void OnGet()
     {
-        try
-        {
-            var keywords = await _mediator.Send(new GetKeywordsQuery());
-            Keywords = keywords.ToList();
-        }
-        catch (SqliteException)
-        {
-            Keywords = new List<Keyword>();
-        }
-
-        return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -73,6 +60,17 @@ public class SuggestModel : PageModel
                 new CsvFileReader(),
                 _mediator,
                 string.IsNullOrEmpty(Input.File) ? null : Input.File);
+
+            if (!string.IsNullOrEmpty(Input.Keyword))
+            {
+                var language = Input.Culture[..Input.Culture.IndexOf('-')];
+                var country = Input.Culture[Input.Culture.IndexOf('-')..];
+                await _suggestApi.Suggest(5, Input.Keyword, language, country);
+            }
+            else if (!string.IsNullOrEmpty(Input.File))
+            {
+                await _suggestApi.Suggest(5);
+            }
         }
 
         if (Input.IsBingSuggest)
@@ -82,6 +80,17 @@ public class SuggestModel : PageModel
                 new CsvFileReader(),
                 _mediator,
                 string.IsNullOrEmpty(Input.File) ? null : Input.File);
+
+            if (!string.IsNullOrEmpty(Input.Keyword))
+            {
+                var language = Input.Culture[..Input.Culture.IndexOf('-')];
+                var country = Input.Culture[Input.Culture.IndexOf('-')..];
+                await _suggestApi.Suggest(5, Input.Keyword, language, country);
+            }
+            else if (!string.IsNullOrEmpty(Input.File))
+            {
+                await _suggestApi.Suggest(5);
+            }
         }
 
         if (Input.IsDuckDuckGoSuggest)
@@ -91,19 +100,19 @@ public class SuggestModel : PageModel
                 new CsvFileReader(),
                 _mediator,
                 string.IsNullOrEmpty(Input.File) ? null : Input.File);
+
+            if (!string.IsNullOrEmpty(Input.Keyword))
+            {
+                var language = Input.Culture[..Input.Culture.IndexOf('-')];
+                var country = Input.Culture[Input.Culture.IndexOf('-')..];
+                await _suggestApi.Suggest(5, Input.Keyword, language, country);
+            }
+            else if (!string.IsNullOrEmpty(Input.File))
+            {
+                await _suggestApi.Suggest(5);
+            }
         }
 
-        if (!string.IsNullOrEmpty(Input.Keyword))
-        {
-            var language = Input.Culture[..Input.Culture.IndexOf('-')];
-            var country = Input.Culture[Input.Culture.IndexOf('-')..];
-            await _suggestApi.Suggest(5, Input.Keyword, language, country);
-        }
-        else if (!string.IsNullOrEmpty(Input.File))
-        {
-            await _suggestApi.Suggest(5);
-        }
-
-        return Page();
+        return RedirectToPage("/Keywords");
     }
 }

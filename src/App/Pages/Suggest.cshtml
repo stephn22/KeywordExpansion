@@ -62,61 +62,6 @@
 </form>
 <hr />
 
-@*@if (Model.Keywords.Any())
-{
-    <table class="table">
-        <thead>
-        <tr class="table-primary">
-            <th>
-                @Html.DisplayNameFor(m => m.Keywords[0].Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(m => m.Keywords[0].Value)
-            </th>
-            <th>
-                @Html.DisplayNameFor(m => m.Keywords[0].Culture)
-            </th>
-            <th>
-                @Html.DisplayNameFor(m => m.Keywords[0].Ranking)
-            </th>
-            <th>
-                @Html.DisplayNameFor(m => m.Keywords[0].Timestamp)
-            </th>
-            <th>
-                @Html.DisplayNameFor(m => m.Keywords[0].SuggestService)
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-            @foreach (var keyword in Model.Keywords)
-            {
-                <tr>
-                    <td>
-                        @keyword.Id
-                    </td>
-                    <td>
-                        @keyword.Value
-                    </td>
-                    <td>
-                        @keyword.Culture
-                    </td>
-                    <td>
-                        @keyword.Ranking
-                    </td>
-                    <td>
-                        @keyword.Timestamp.ToLocalTime()
-                    </td>
-                    <td>
-                        @keyword.SuggestService
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}*@
-
-
-
 @section Scripts
 {
 <script src="/js/suggest.js"></script>

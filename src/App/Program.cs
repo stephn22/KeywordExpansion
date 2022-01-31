@@ -15,6 +15,8 @@ public class Program
         Log.Information("Starting application");
 
         CreateHostBuilder(args).Build().Run();
+
+        Log.CloseAndFlush();
     }
 
     public static IHostBuilder CreateHostBuilder(string[] args) =>
