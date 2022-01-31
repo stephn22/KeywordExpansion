@@ -11,6 +11,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     private readonly IDateTime _dateTime;
     private readonly IDomainEventService _domainEventService;
 
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    : base(options)
+    { }
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IDomainEventService domainEventService, IDateTime dateTime)
      : base(options)
     {
@@ -40,7 +44,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         }
 
         var result = await base.SaveChangesAsync(cancellationToken);
-
 
         return result;
     }
