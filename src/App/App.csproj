@@ -34,4 +34,9 @@
   <ItemGroup>
     <Folder Include="Log\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Database.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

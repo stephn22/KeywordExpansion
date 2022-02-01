@@ -34,7 +34,6 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IHostEnvironment env)
     {
-        env.EnvironmentName = "Development";
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();

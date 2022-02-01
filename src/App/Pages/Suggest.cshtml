@@ -16,19 +16,19 @@
     </div>
     <hr />
     <div class="form-floating col-4 mb-2">
-        <input type="text" class="form-control" id="keyword" asp-for="Input.Keyword" placeholder="Keyword" required>
+        <input type="text" class="form-control" id="keyword" asp-for="Input.Keyword" placeholder="Keyword">
         <label for="keyword">Keyword</label>
         <small class="small invalid-feedback" id="keyword-invalid-feedback"></small>
     </div>
     <div class="form-group col-4 mb-2">
-        <select id="select-culture" class="form-control" aria-label="countries" asp-items="Model.Cultures" asp-for="Input.Culture" required>
+        <select id="select-culture" class="form-control" aria-label="countries" asp-items="Model.Cultures" asp-for="Input.Culture" >
             <option value="">-- Seleziona Cultura --</option>
         </select>
     </div>
     <hr />
     <div class="form-group col-4 mb-2" data-bs-toggle="popover" data-bs-trigger="hover focus" title="Formato file CSV" data-bs-content="Il formato delle colonne del file CSV deve essere del tipo (id, keyword, country, lang)">
         <label for="keyword">File</label>
-        <input type="file" class="form-control" id="file" asp-for="Input.File" placeholder="File" required>
+        <input type="file" class="form-control" id="file" asp-for="Input.File" placeholder="File">
         <small class="small invalid-feedback" id="file-invalid-feedback"></small>
     </div>
     <hr />

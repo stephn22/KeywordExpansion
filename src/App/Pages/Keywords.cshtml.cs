@@ -34,19 +34,38 @@ namespace App.Pages
         public string TimeStampSort { get; set; }
         public string SuggestServiceSort { get; set; }
         public string CurrentSort { get; set; }
+        public string CurrentFilter { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string sortOrder, int? pageIndex)
+        public async Task<IActionResult> OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
         {
             CurrentSort = sortOrder;
+            
 
-            IdSort = string.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
-            ValueSort = string.IsNullOrEmpty(sortOrder) ? "value_desc" : "";
-            CultureSort = string.IsNullOrEmpty(sortOrder) ? "culture_desc" : "";
-            RankingSort = string.IsNullOrEmpty(sortOrder) ? "ranking_desc" : "";
-            TimeStampSort = sortOrder == "TimeStamp" ? "timestamp_desc" : "TimeStamp";
-            SuggestServiceSort = string.IsNullOrEmpty(sortOrder) ? "suggestservice_desc" : "";
+            IdSort = string.IsNullOrEmpty(sortOrder) ? IdDesc : "";
+            ValueSort = string.IsNullOrEmpty(sortOrder) ? ValueDesc : "";
+            CultureSort = string.IsNullOrEmpty(sortOrder) ? CultureDesc : "";
+            RankingSort = string.IsNullOrEmpty(sortOrder) ? RankingDesc : "";
+            TimeStampSort = sortOrder == TimeStamp ? TimeStampDesc : TimeStamp;
+            SuggestServiceSort = string.IsNullOrEmpty(sortOrder) ? SuggestServiceDesc : "";
+
+            if (searchString != null)
+            {
+                pageIndex = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            CurrentFilter = searchString;
 
             var keywordsIq = await _mediator.Send(new GetKeywordsQuery());
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                keywordsIq = keywordsIq.Where(k => k.Value.Contains(searchString)
+                || k.Culture.Contains(searchString) || k.SuggestService.Contains(searchString));
+            }
 
             if (keywordsIq.Any())
             {
@@ -81,7 +100,7 @@ namespace App.Pages
                         break;
 
                     default:
-                        keywordsIq = keywordsIq.OrderBy(k => k.Id);
+                        keywordsIq = keywordsIq.OrderByDescending(k => k.Timestamp);
                         break;
                 }
 

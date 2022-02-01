@@ -45,9 +45,17 @@ public class SuggestModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
+        try
+        {
+
+        }
+        catch (IOException e)
+        {
+            
+        }
+        // FIXME:
         if (Input.IsGoogleSuggest)
         {
-            _logger.LogInformation("Google suggest");
             var suggestApiGoogle = new GoogleSuggestApi(
                 _configuration["WebShare:Username"],
                 _configuration["WebShare:Password"],
@@ -60,12 +68,12 @@ public class SuggestModel : PageModel
             if (!string.IsNullOrEmpty(Input.Keyword))
             {
                 var language = Input.Culture[..Input.Culture.IndexOf('-')];
-                var country = Input.Culture[Input.Culture.IndexOf('-')..];
-                await suggestApiGoogle.Suggest(5, Input.Keyword, language, country);
+                var country = Input.Culture[(Input.Culture.IndexOf('-') + 1)..];
+                await suggestApiGoogle.Suggest(Input.Depth, Input.Keyword, language, country);
             }
             else if (!string.IsNullOrEmpty(Input.File))
             {
-                await suggestApiGoogle.Suggest(5);
+                await suggestApiGoogle.Suggest(Input.Depth);
             }
         }
 
@@ -80,12 +88,12 @@ public class SuggestModel : PageModel
             if (!string.IsNullOrEmpty(Input.Keyword))
             {
                 var language = Input.Culture[..Input.Culture.IndexOf('-')];
-                var country = Input.Culture[Input.Culture.IndexOf('-')..];
-                await suggestApiBing.Suggest(5, Input.Keyword, language, country);
+                var country = Input.Culture[(Input.Culture.IndexOf('-') + 1)..];
+                await suggestApiBing.Suggest(Input.Depth, Input.Keyword, language, country);
             }
             else if (!string.IsNullOrEmpty(Input.File))
             {
-                await suggestApiBing.Suggest(5);
+                await suggestApiBing.Suggest(Input.Depth);
             }
         }
 
@@ -100,12 +108,12 @@ public class SuggestModel : PageModel
             if (!string.IsNullOrEmpty(Input.Keyword))
             {
                 var language = Input.Culture[..Input.Culture.IndexOf('-')];
-                var country = Input.Culture[Input.Culture.IndexOf('-')..];
-                await suggestApiDuckDuckGo.Suggest(5, Input.Keyword, language, country);
+                var country = Input.Culture[(Input.Culture.IndexOf('-') + 1)..];
+                await suggestApiDuckDuckGo.Suggest(Input.Depth, Input.Keyword, language, country);
             }
             else if (!string.IsNullOrEmpty(Input.File))
             {
-                await suggestApiDuckDuckGo.Suggest(5);
+                await suggestApiDuckDuckGo.Suggest(Input.Depth);
             }
         }
 

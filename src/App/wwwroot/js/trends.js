@@ -12,8 +12,7 @@ selectCulture.addEventListener('change', () => {
 });
 
 submitBtn.addEventListener('click', () => {
-    disableElement(submitBtn);
-    disableElement(selectCulture);
+    /*disableBtn(submitBtn);*/
     submitBtn.innerText = '';
     submitBtn.innerHTML = `<div class="spinner-border spinner-border-sm text-primary" role="status">
                                <span class="visually-hidden">Loading...</span>

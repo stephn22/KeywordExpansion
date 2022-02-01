@@ -6,7 +6,7 @@ using OpenQA.Selenium.Edge;
 using System.Collections.Concurrent;
 using System.Globalization;
 
-namespace Infrastructure.Services.Driver.Extensions;
+namespace Infrastructure.Services.Driver.Extensions; // FIXME: aspettare quando si carica la pagina
 
 public static class ChromiumDriverExtensions
 {
@@ -93,7 +93,7 @@ public static class ChromiumDriverExtensions
                                                 {
                                                     Value = element.Text,
                                                     Culture = culture,
-                                                    SuggestService = "Google Trends",
+                                                    SuggestService = "GoogleTrends",
                                                     Ranking = 0
                                                 });
                                             }

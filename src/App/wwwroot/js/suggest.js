@@ -68,11 +68,17 @@ keywordRadio.addEventListener('change', () => {
         enableInput(keyword);
         enableInput(selectCulture);
         disableInput(file);
+        setRequired(keyword);
+        setRequired(selectCulture);
+        unsetRequired(file);
     } else {
         clearInput(keyword);
         disableInput(keyword);
         disableInput(selectCulture);
         enableInput(file);
+        setRequired(file);
+        unsetRequired(keyword);
+        unsetRequired(selectCulture);
     }
 });
 
@@ -82,11 +88,17 @@ fileRadio.addEventListener('change', () => {
         enableInput(file);
         disableInput(keyword);
         disableInput(selectCulture);
+        setRequired(file);
+        unsetRequired(keyword);
+        unsetRequired(selectCulture);
     } else {
         clearInput(file);
         disableInput(file);
         enableInput(keyword);
         enableInput(selectCulture);
+        setRequired(keyword);
+        setRequired(selectCulture);
+        unsetRequired(file);
     }
 });
 
@@ -128,12 +140,28 @@ for (let i = 0; i < switchs.length; i++) {
 }
 
 submitBtn.addEventListener('click', () => {
-    disableBtn(submitBtn);
+    /*disableBtn(submitBtn);*/
     submitBtn.innerText = '';
     submitBtn.innerHTML = `<div class="spinner-border spinner-border-sm text-primary" role="status">
                                <span class="visually-hidden">Loading...</span>
                            </div>`;
 });
+
+/**
+ *
+ * @param {HTMLInputElement} input
+ */
+function setRequired(input) {
+    input.attributes.setNamedItem(document.createAttribute('required'));
+}
+
+/**
+ *
+ * @param {HTMLInputElement} input
+ */
+function unsetRequired(input) {
+    input.attributes.removeNamedItem('required');
+}
 
 /**
  * 
