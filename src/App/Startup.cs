@@ -1,10 +1,8 @@
-﻿using System.Reflection;
-using Application;
+﻿using Application;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
 using FluentValidation.AspNetCore;
 using Infrastructure;
-using MediatR;
 
 namespace App;
 
@@ -21,6 +19,8 @@ public class Startup
     {
         services.AddApplication();
         services.AddInfrastructure(Configuration);
+
+        services.AddElectron();
 
         services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -70,10 +70,12 @@ public class Startup
             MinWidth = 200,
             Center = true,
             Show = false,
-            Icon = @"\wwwroot\pictures\graph-up.svg"
+            Icon = Path.GetFullPath("/wwwroot/pictures/graph_up.svg")
         });
 
         await browserWindow.WebContents.Session.ClearCacheAsync();
+        await browserWindow.WebContents.Session.ClearStorageDataAsync();
+        await browserWindow.WebContents.Session.ClearHostResolverCacheAsync();
 
         browserWindow.OnReadyToShow += () => browserWindow.Show();
         browserWindow.SetTitle("Keyword Expansion");
@@ -83,7 +85,5 @@ public class Startup
         {
             browserWindow.RemoveMenu();
         }
-
-        browserWindow.LoadURL("http://localhost:8000/");
     }
 }
