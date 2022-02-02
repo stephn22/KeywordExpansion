@@ -13,6 +13,10 @@ public class KeywordConfiguration : IEntityTypeConfiguration<Keyword>
             .HasMaxLength(KeywordConstants.MaxLength)
             .IsRequired();
 
+        builder.Property(k => k.StartingSeed)
+            .HasMaxLength(KeywordConstants.MaxLength)
+            .HasDefaultValue("");
+
         builder.Property(k => k.Culture)
             .HasMaxLength(5)
             .IsRequired();

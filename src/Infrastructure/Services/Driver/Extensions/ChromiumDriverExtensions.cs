@@ -4,9 +4,9 @@ using MediatR;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Edge;
 using System.Collections.Concurrent;
-using System.Globalization;
+using OpenQA.Selenium.Support.UI;
 
-namespace Infrastructure.Services.Driver.Extensions; // FIXME: aspettare quando si carica la pagina
+namespace Infrastructure.Services.Driver.Extensions;
 
 public static class ChromiumDriverExtensions
 {
@@ -32,7 +32,13 @@ public static class ChromiumDriverExtensions
     {
         var keywords = new ConcurrentBag<string>();
         var categories = new List<char> { 'b', 'e', 'm', 't', 's', 'h' };
-        var geo = culture.Substring(culture.IndexOf('-') + 1).ToUpperInvariant();
+        var geo = culture[(culture.IndexOf('-') + 1)..].ToUpperInvariant();
+
+        if (geo == "UK")
+        {
+            geo = "GB";
+        }
+
         var domain = geo.ToLowerInvariant();
 
         //while (true)
@@ -50,6 +56,8 @@ public static class ChromiumDriverExtensions
             {
                 //var expand = driver.FindElementByClassName("feed-load-more-button");
                 //expand?.Click();
+                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(7));
+                wait.Until(d => d.FindElements(By.ClassName("title")));
 
                 var items = driver.FindElements(By.ClassName("feed-item"));
                 if (items != null)
@@ -109,7 +117,7 @@ public static class ChromiumDriverExtensions
                     }
                 }
             }
-            catch (NoSuchElementException e)
+            catch (NoSuchElementException)
             { }
         }
     }

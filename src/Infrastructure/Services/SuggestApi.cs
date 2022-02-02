@@ -102,6 +102,7 @@ public abstract class SuggestApi : ISuggestApi
     {
         await GetKeywords(keyword, language, country, depth);
     }
+
     public async Task GetKeywords(string seed, string language, string country, int depth)
     {
         if (depth > 0)
@@ -121,6 +122,7 @@ public abstract class SuggestApi : ISuggestApi
                         await _mediator.Send(new CreateKeywordCommand
                         {
                             Value = suggestion,
+                            StartingSeed = seed,
                             Culture = $"{language}-{country}",
                             Ranking = 0,
                             SuggestService = GetType().Name,
