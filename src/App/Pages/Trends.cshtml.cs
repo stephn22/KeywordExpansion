@@ -33,8 +33,15 @@ public class TrendsModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        using var driver = ChromiumDriverExtensions.GetChromiumDriver();
-        await driver.ExplorePage(_mediator, Input.Culture);
+        try
+        {
+            using var driver = ChromiumDriverExtensions.GetChromiumDriver();
+            await driver.ExplorePage(_mediator, Input.Culture);
+        }
+        catch (Exception)
+        {
+            return RedirectToPage("/Keywords");
+        }
 
         return RedirectToPage("/Keywords");
     }

@@ -11,6 +11,8 @@ public class Keyword
     /// </summary>
     public string Value { get; set; }
 
+    public string StartingSeed { get; set; }
+
     /// <summary>
     /// Cultura della keyword "lingua-NAZIONE"
     /// </summary>
@@ -27,7 +29,7 @@ public class Keyword
     public DateTime Timestamp { get; set; }
 
     /// <summary>
-    /// Servizio di suggest utilizzato (Google, Bing, DuckDuckGo)
+    /// Servizio di suggest utilizzato (Google, Bing, DuckDuckGo, Google Trends)
     /// </summary>
     public string SuggestService { get; set; }
 }

@@ -9,6 +9,7 @@ public class UpdateKeywordCommand : IRequest
 {
     public int Id { get; set; }
     public string Value { get; set; }
+    public string StartingSeed { get; set; }
     public string Culture { get; set; }
     public int Ranking { get; set; }
     public DateTime Timestamp { get; set; }
@@ -34,6 +35,7 @@ public class UpdateKeywordCommandHandler : IRequestHandler<UpdateKeywordCommand>
         }
 
         entity.Value = request.Value;
+        entity.StartingSeed = request.StartingSeed;
         entity.Culture = request.Culture;
         entity.Ranking = request.Ranking;
         entity.Timestamp = request.Timestamp;

@@ -6,6 +6,7 @@ namespace Application.Keywords.Commands.CreateKeyword;
 public class CreateKeywordCommand : IRequest<Keyword>
 {
     public string Value { get; set; }
+    public string StartingSeed { get; set; }
     public string Culture { get; set; }
     public int Ranking { get; set; }
     public string SuggestService { get; set; }
@@ -25,6 +26,7 @@ public class CreateKeywordCommandHandler : IRequestHandler<CreateKeywordCommand,
         var entity = new Keyword
         {
             Value = request.Value,
+            StartingSeed = request.StartingSeed,
             Culture = request.Culture,
             Ranking = request.Ranking,
             Timestamp = _dateTime.Now,

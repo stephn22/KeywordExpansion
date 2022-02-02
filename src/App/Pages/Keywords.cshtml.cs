@@ -14,6 +14,7 @@ namespace App.Pages
         private readonly IConfiguration _configuration;
         private const string IdDesc = "id_desc";
         private const string ValueDesc = "value_desc";
+        private const string StartingSeedDesc = "startingseed_desc";
         private const string CultureDesc = "culture_desc";
         private const string RankingDesc = "ranking_desc";
         private const string TimeStamp = "TimeStamp";
@@ -29,6 +30,7 @@ namespace App.Pages
         public PaginatedList<Keyword> Keywords { get; set; }
         public string IdSort { get; set; }
         public string ValueSort { get; set; }
+        public string StartingSeedSort { get; set; }
         public string CultureSort { get; set; }
         public string RankingSort { get; set; }
         public string TimeStampSort { get; set; }
@@ -39,10 +41,11 @@ namespace App.Pages
         public async Task<IActionResult> OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
         {
             CurrentSort = sortOrder;
-            
+
 
             IdSort = string.IsNullOrEmpty(sortOrder) ? IdDesc : "";
             ValueSort = string.IsNullOrEmpty(sortOrder) ? ValueDesc : "";
+            StartingSeedSort = string.IsNullOrEmpty(sortOrder) ? StartingSeedDesc : "";
             CultureSort = string.IsNullOrEmpty(sortOrder) ? CultureDesc : "";
             RankingSort = string.IsNullOrEmpty(sortOrder) ? RankingDesc : "";
             TimeStampSort = sortOrder == TimeStamp ? TimeStampDesc : TimeStamp;
@@ -69,40 +72,18 @@ namespace App.Pages
 
             if (keywordsIq.Any())
             {
-                switch (sortOrder)
+                keywordsIq = sortOrder switch
                 {
-                    case IdDesc:
-                        keywordsIq = keywordsIq.OrderByDescending(k => k.Id);
-                        break;
-
-                    case ValueDesc:
-                        keywordsIq = keywordsIq.OrderByDescending(k => k.Value);
-                        break;
-
-                    case CultureDesc:
-                        keywordsIq = keywordsIq.OrderByDescending(k => k.Culture);
-                        break;
-
-                    case RankingDesc:
-                        keywordsIq = keywordsIq.OrderByDescending(k => k.Ranking);
-                        break;
-
-                    case TimeStamp:
-                        keywordsIq = keywordsIq.OrderBy(k => k.Timestamp);
-                        break;
-
-                    case TimeStampDesc:
-                        keywordsIq = keywordsIq.OrderByDescending(k => k.Timestamp);
-                        break;
-
-                    case SuggestServiceDesc:
-                        keywordsIq = keywordsIq.OrderByDescending(k => k.SuggestService);
-                        break;
-
-                    default:
-                        keywordsIq = keywordsIq.OrderByDescending(k => k.Timestamp);
-                        break;
-                }
+                    IdDesc => keywordsIq.OrderByDescending(k => k.Id),
+                    ValueDesc => keywordsIq.OrderByDescending(k => k.Value),
+                    StartingSeedDesc => keywordsIq.OrderByDescending(k => k.StartingSeed),
+                    CultureDesc => keywordsIq.OrderByDescending(k => k.Culture),
+                    RankingDesc => keywordsIq.OrderByDescending(k => k.Ranking),
+                    TimeStamp => keywordsIq.OrderBy(k => k.Timestamp),
+                    TimeStampDesc => keywordsIq.OrderByDescending(k => k.Timestamp),
+                    SuggestServiceDesc => keywordsIq.OrderByDescending(k => k.SuggestService),
+                    _ => keywordsIq.OrderBy(k => k.Id)
+                };
 
                 var pageSize = _configuration.GetValue("PageSize", 10);
                 Keywords = await PaginatedList<Keyword>.CreateAsync(

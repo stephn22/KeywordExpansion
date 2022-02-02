@@ -47,74 +47,72 @@ public class SuggestModel : PageModel
     {
         try
         {
+            if (Input.IsGoogleSuggest)
+            {
+                var suggestApiGoogle = new GoogleSuggestApi(
+                    _configuration["WebShare:Username"],
+                    _configuration["WebShare:Password"],
+                    _configuration["WebShare:ProxyAddress"],
+                    KeywordConstants.MaxLength,
+                    new CsvFileReader(),
+                    _mediator,
+                    string.IsNullOrEmpty(Input.File) ? null : Input.File);
 
+                if (!string.IsNullOrEmpty(Input.Keyword))
+                {
+                    var language = Input.Culture[..Input.Culture.IndexOf('-')];
+                    var country = Input.Culture[(Input.Culture.IndexOf('-') + 1)..];
+                    await suggestApiGoogle.Suggest(Input.Depth, Input.Keyword, language, country);
+                }
+                else if (!string.IsNullOrEmpty(Input.File))
+                {
+                    await suggestApiGoogle.Suggest(Input.Depth);
+                }
+            }
+
+            if (Input.IsBingSuggest)
+            {
+                var suggestApiBing = new BingSuggestApi(
+                    KeywordConstants.MaxLength,
+                    new CsvFileReader(),
+                    _mediator,
+                    string.IsNullOrEmpty(Input.File) ? null : Input.File);
+
+                if (!string.IsNullOrEmpty(Input.Keyword))
+                {
+                    var language = Input.Culture[..Input.Culture.IndexOf('-')];
+                    var country = Input.Culture[(Input.Culture.IndexOf('-') + 1)..];
+                    await suggestApiBing.Suggest(Input.Depth, Input.Keyword, language, country);
+                }
+                else if (!string.IsNullOrEmpty(Input.File))
+                {
+                    await suggestApiBing.Suggest(Input.Depth);
+                }
+            }
+
+            if (Input.IsDuckDuckGoSuggest)
+            {
+                var suggestApiDuckDuckGo = new DuckDuckGoSuggestApi(
+                    KeywordConstants.MaxLength,
+                    new CsvFileReader(),
+                    _mediator,
+                    string.IsNullOrEmpty(Input.File) ? null : Input.File);
+
+                if (!string.IsNullOrEmpty(Input.Keyword))
+                {
+                    var language = Input.Culture[..Input.Culture.IndexOf('-')];
+                    var country = Input.Culture[(Input.Culture.IndexOf('-') + 1)..];
+                    await suggestApiDuckDuckGo.Suggest(Input.Depth, Input.Keyword, language, country);
+                }
+                else if (!string.IsNullOrEmpty(Input.File))
+                {
+                    await suggestApiDuckDuckGo.Suggest(Input.Depth);
+                }
+            }
         }
-        catch (IOException e)
+        catch (Exception)
         {
-            
-        }
-        // FIXME:
-        if (Input.IsGoogleSuggest)
-        {
-            var suggestApiGoogle = new GoogleSuggestApi(
-                _configuration["WebShare:Username"],
-                _configuration["WebShare:Password"],
-                _configuration["WebShare:ProxyAddress"],
-                KeywordConstants.MaxLength,
-                new CsvFileReader(),
-                _mediator,
-                string.IsNullOrEmpty(Input.File) ? null : Input.File);
-
-            if (!string.IsNullOrEmpty(Input.Keyword))
-            {
-                var language = Input.Culture[..Input.Culture.IndexOf('-')];
-                var country = Input.Culture[(Input.Culture.IndexOf('-') + 1)..];
-                await suggestApiGoogle.Suggest(Input.Depth, Input.Keyword, language, country);
-            }
-            else if (!string.IsNullOrEmpty(Input.File))
-            {
-                await suggestApiGoogle.Suggest(Input.Depth);
-            }
-        }
-
-        if (Input.IsBingSuggest)
-        {
-            var suggestApiBing = new BingSuggestApi(
-                KeywordConstants.MaxLength,
-                new CsvFileReader(),
-                _mediator,
-                string.IsNullOrEmpty(Input.File) ? null : Input.File);
-
-            if (!string.IsNullOrEmpty(Input.Keyword))
-            {
-                var language = Input.Culture[..Input.Culture.IndexOf('-')];
-                var country = Input.Culture[(Input.Culture.IndexOf('-') + 1)..];
-                await suggestApiBing.Suggest(Input.Depth, Input.Keyword, language, country);
-            }
-            else if (!string.IsNullOrEmpty(Input.File))
-            {
-                await suggestApiBing.Suggest(Input.Depth);
-            }
-        }
-
-        if (Input.IsDuckDuckGoSuggest)
-        {
-            var suggestApiDuckDuckGo = new DuckDuckGoSuggestApi(
-                KeywordConstants.MaxLength,
-                new CsvFileReader(),
-                _mediator,
-                string.IsNullOrEmpty(Input.File) ? null : Input.File);
-
-            if (!string.IsNullOrEmpty(Input.Keyword))
-            {
-                var language = Input.Culture[..Input.Culture.IndexOf('-')];
-                var country = Input.Culture[(Input.Culture.IndexOf('-') + 1)..];
-                await suggestApiDuckDuckGo.Suggest(Input.Depth, Input.Keyword, language, country);
-            }
-            else if (!string.IsNullOrEmpty(Input.File))
-            {
-                await suggestApiDuckDuckGo.Suggest(Input.Depth);
-            }
+            return RedirectToPage("/Keywords");
         }
 
         return RedirectToPage("/Keywords");
