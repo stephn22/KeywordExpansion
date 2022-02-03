@@ -78,7 +78,7 @@ public static class ChromiumDriverExtensions
                                 {
                                     Value = keyword,
                                     Culture = culture,
-                                    SuggestService = "Google Trends",
+                                    SuggestService = "GoogleTrends",
                                     Ranking = 0
                                 });
 
