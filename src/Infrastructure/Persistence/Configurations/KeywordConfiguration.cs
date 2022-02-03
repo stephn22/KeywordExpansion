@@ -11,6 +11,7 @@ public class KeywordConfiguration : IEntityTypeConfiguration<Keyword>
     {
         builder.Property(k => k.Value)
             .HasMaxLength(KeywordConstants.MaxLength)
+            .HasDefaultValue("N/A")
             .IsRequired();
 
         builder.Property(k => k.StartingSeed)

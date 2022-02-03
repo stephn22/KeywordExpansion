@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace App.Util;
+namespace Application.Common.Services.Util;
 
 public static class Utilities
 {

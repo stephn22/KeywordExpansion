@@ -1,4 +1,4 @@
-using App.Util;
+using Application.Common.Services.Util;
 using Infrastructure.Services.Driver.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -10,12 +10,10 @@ namespace App.Pages;
 public class TrendsModel : PageModel
 {
     private readonly IMediator _mediator;
-    private readonly ILogger<TrendsModel> _logger;
 
-    public TrendsModel(IMediator mediator, ILogger<TrendsModel> logger)
+    public TrendsModel(IMediator mediator)
     {
         _mediator = mediator;
-        _logger = logger;
     }
 
     public SelectList Cultures => new(Utilities.CultureList(), "Key", "Value");

@@ -1,6 +1,8 @@
-using App.Util;
+using Application.Common.Interfaces;
+using Application.Common.Services.Util;
 using Domain.Constants;
 using Infrastructure.File;
+using Infrastructure.Services;
 using Infrastructure.Services.BingSuggest;
 using Infrastructure.Services.DuckDuckGoSuggest;
 using Infrastructure.Services.GoogleSuggest;
@@ -16,6 +18,7 @@ public class SuggestModel : PageModel
     private readonly IMediator _mediator;
     private readonly IConfiguration _configuration;
     private readonly ILogger<SuggestModel> _logger;
+    private ISuggestApi _suggestApi;
 
     public SuggestModel(IMediator mediator, IConfiguration configuration)
     {
@@ -45,28 +48,31 @@ public class SuggestModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
+        
+
         try
         {
             if (Input.IsGoogleSuggest)
             {
-                var suggestApiGoogle = new GoogleSuggestApi(
-                    _configuration["WebShare:Username"],
-                    _configuration["WebShare:Password"],
-                    _configuration["WebShare:ProxyAddress"],
-                    KeywordConstants.MaxLength,
-                    new CsvFileReader(),
-                    _mediator,
-                    string.IsNullOrEmpty(Input.File) ? null : Input.File);
-
                 if (!string.IsNullOrEmpty(Input.Keyword))
                 {
                     var language = Input.Culture[..Input.Culture.IndexOf('-')];
                     var country = Input.Culture[(Input.Culture.IndexOf('-') + 1)..];
-                    await suggestApiGoogle.Suggest(Input.Depth, Input.Keyword, language, country);
+                    _suggestApi = new SuggestApi(
+                        _mediator,
+                        _configuration["WebShare:Username"],
+                        _configuration["WebShare:Password"],
+                        _configuration["WebShare:ProxyAddress"]);
                 }
                 else if (!string.IsNullOrEmpty(Input.File))
                 {
-                    await suggestApiGoogle.Suggest(Input.Depth);
+                    _suggestApi = new SuggestApi(
+                        _mediator,
+                        _configuration["WebShare:Username"],
+                        _configuration["WebShare:Password"],
+                        _configuration["WebShare:ProxyAddress"],
+                        new CsvFileReader(),
+                        Input.File);
                 }
             }
 

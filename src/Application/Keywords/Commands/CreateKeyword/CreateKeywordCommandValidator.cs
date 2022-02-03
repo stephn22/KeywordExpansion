@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Domain.Constants;
+using FluentValidation;
 
 namespace Application.Keywords.Commands.CreateKeyword;
 
@@ -7,7 +8,11 @@ public class CreateKeywordCommandValidator : AbstractValidator<CreateKeywordComm
     public CreateKeywordCommandValidator()
     {
         RuleFor(k => k.Value)
-            .NotEmpty();
+            .MaximumLength(KeywordConstants.MaxLength);
+            //.NotEmpty();
+
+        RuleFor(k => k.StartingSeed)
+            .MaximumLength(KeywordConstants.MaxLength);
 
         RuleFor(k => k.Culture)
             .NotEmpty();
