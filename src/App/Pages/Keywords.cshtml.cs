@@ -1,96 +1,103 @@
 using Application.Common.Models;
 using Application.Keywords.Queries.GetKeywords;
+using Application.Keywords.Queries.RankKeywords;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace App.Pages
+namespace App.Pages;
+
+public class KeywordsModel : PageModel
 {
-    public class KeywordsModel : PageModel
+    private readonly IMediator _mediator;
+    private readonly IConfiguration _configuration;
+    private const string IdDesc = "id_desc";
+    private const string ValueDesc = "value_desc";
+    private const string StartingSeedDesc = "startingseed_desc";
+    private const string CultureDesc = "culture_desc";
+    private const string RankingDesc = "ranking_desc";
+    private const string TimeStamp = "TimeStamp";
+    private const string TimeStampDesc = "timestamp_desc";
+    private const string SuggestServiceDesc = "suggestservice_desc";
+
+    public KeywordsModel(IMediator mediator, IConfiguration configuration)
     {
-        private readonly IMediator _mediator;
-        private readonly IConfiguration _configuration;
-        private const string IdDesc = "id_desc";
-        private const string ValueDesc = "value_desc";
-        private const string StartingSeedDesc = "startingseed_desc";
-        private const string CultureDesc = "culture_desc";
-        private const string RankingDesc = "ranking_desc";
-        private const string TimeStamp = "TimeStamp";
-        private const string TimeStampDesc = "timestamp_desc";
-        private const string SuggestServiceDesc = "suggestservice_desc";
+        _mediator = mediator;
+        _configuration = configuration;
+    }
 
-        public KeywordsModel(IMediator mediator, IConfiguration configuration)
+    public PaginatedList<Keyword> Keywords { get; set; }
+    public string IdSort { get; set; }
+    public string ValueSort { get; set; }
+    public string StartingSeedSort { get; set; }
+    public string CultureSort { get; set; }
+    public string RankingSort { get; set; }
+    public string TimeStampSort { get; set; }
+    public string SuggestServiceSort { get; set; }
+    public string CurrentSort { get; set; }
+    public string CurrentFilter { get; set; }
+
+    public async Task<IActionResult> OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
+    {
+        CurrentSort = sortOrder;
+
+
+        IdSort = string.IsNullOrEmpty(sortOrder) ? IdDesc : "";
+        ValueSort = string.IsNullOrEmpty(sortOrder) ? ValueDesc : "";
+        StartingSeedSort = string.IsNullOrEmpty(sortOrder) ? StartingSeedDesc : "";
+        CultureSort = string.IsNullOrEmpty(sortOrder) ? CultureDesc : "";
+        RankingSort = string.IsNullOrEmpty(sortOrder) ? RankingDesc : "";
+        TimeStampSort = sortOrder == TimeStamp ? TimeStampDesc : TimeStamp;
+        SuggestServiceSort = string.IsNullOrEmpty(sortOrder) ? SuggestServiceDesc : "";
+
+        if (searchString != null)
         {
-            _mediator = mediator;
-            _configuration = configuration;
+            pageIndex = 1;
+        }
+        else
+        {
+            searchString = currentFilter;
         }
 
-        public PaginatedList<Keyword> Keywords { get; set; }
-        public string IdSort { get; set; }
-        public string ValueSort { get; set; }
-        public string StartingSeedSort { get; set; }
-        public string CultureSort { get; set; }
-        public string RankingSort { get; set; }
-        public string TimeStampSort { get; set; }
-        public string SuggestServiceSort { get; set; }
-        public string CurrentSort { get; set; }
-        public string CurrentFilter { get; set; }
+        CurrentFilter = searchString;
 
-        public async Task<IActionResult> OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
+        var keywordsIq = await _mediator.Send(new GetKeywordsQuery());
+
+        if (!string.IsNullOrEmpty(searchString))
         {
-            CurrentSort = sortOrder;
-
-
-            IdSort = string.IsNullOrEmpty(sortOrder) ? IdDesc : "";
-            ValueSort = string.IsNullOrEmpty(sortOrder) ? ValueDesc : "";
-            StartingSeedSort = string.IsNullOrEmpty(sortOrder) ? StartingSeedDesc : "";
-            CultureSort = string.IsNullOrEmpty(sortOrder) ? CultureDesc : "";
-            RankingSort = string.IsNullOrEmpty(sortOrder) ? RankingDesc : "";
-            TimeStampSort = sortOrder == TimeStamp ? TimeStampDesc : TimeStamp;
-            SuggestServiceSort = string.IsNullOrEmpty(sortOrder) ? SuggestServiceDesc : "";
-
-            if (searchString != null)
-            {
-                pageIndex = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
-
-            CurrentFilter = searchString;
-
-            var keywordsIq = await _mediator.Send(new GetKeywordsQuery());
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                keywordsIq = keywordsIq.Where(k => k.Value.Contains(searchString)
-                || k.Culture.Contains(searchString) || k.SuggestService.Contains(searchString));
-            }
-
-            if (keywordsIq.Any())
-            {
-                keywordsIq = sortOrder switch
-                {
-                    IdDesc => keywordsIq.OrderByDescending(k => k.Id),
-                    ValueDesc => keywordsIq.OrderByDescending(k => k.Value),
-                    StartingSeedDesc => keywordsIq.OrderByDescending(k => k.StartingSeed),
-                    CultureDesc => keywordsIq.OrderByDescending(k => k.Culture),
-                    RankingDesc => keywordsIq.OrderByDescending(k => k.Ranking),
-                    TimeStamp => keywordsIq.OrderBy(k => k.Timestamp),
-                    TimeStampDesc => keywordsIq.OrderByDescending(k => k.Timestamp),
-                    SuggestServiceDesc => keywordsIq.OrderByDescending(k => k.SuggestService),
-                    _ => keywordsIq.OrderBy(k => k.Id)
-                };
-
-                var pageSize = _configuration.GetValue("PageSize", 10);
-                Keywords = await PaginatedList<Keyword>.CreateAsync(
-                    keywordsIq.AsNoTracking(), pageIndex ?? 1, pageSize);
-            }
-
-            return Page();
+            keywordsIq = keywordsIq.Where(k => k.Value.Contains(searchString)
+                                               || k.Culture.Contains(searchString) || k.SuggestService.Contains(searchString));
         }
+
+        if (keywordsIq.Any())
+        {
+            keywordsIq = sortOrder switch
+            {
+                IdDesc => keywordsIq.OrderByDescending(k => k.Id),
+                ValueDesc => keywordsIq.OrderByDescending(k => k.Value),
+                StartingSeedDesc => keywordsIq.OrderByDescending(k => k.StartingSeed),
+                CultureDesc => keywordsIq.OrderByDescending(k => k.Culture),
+                RankingDesc => keywordsIq.OrderByDescending(k => k.Ranking),
+                TimeStamp => keywordsIq.OrderBy(k => k.Timestamp),
+                TimeStampDesc => keywordsIq.OrderByDescending(k => k.Timestamp),
+                SuggestServiceDesc => keywordsIq.OrderByDescending(k => k.SuggestService),
+                _ => keywordsIq.OrderBy(k => k.Id)
+            };
+
+            var pageSize = _configuration.GetValue("PageSize", 10);
+            Keywords = await PaginatedList<Keyword>.CreateAsync(
+                keywordsIq.AsNoTracking(), pageIndex ?? 1, pageSize);
+        }
+
+        return Page();
+    }
+
+    public async Task<IActionResult> OnPostAsync()
+    {
+        await _mediator.Send(new RankKeywordsQuery());
+
+        return Page();
     }
 }
