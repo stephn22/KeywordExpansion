@@ -156,23 +156,12 @@ file.addEventListener('input', () => {
 
 for (let i = 0; i < switchs.length; i++) {
     switchs[i].addEventListener('change', () => {
-        if (!switchesChecked()) {
-            setInvalidMessage(serviceInvalidFeedback, 'E\' necessario selezionare almeno un servizio');
-
-            if ((keyword.value.length > 0 && selectCulture.value.length > 0) || file.value.length > 0) {
-                disableElement(submitBtn);
-            }
-        } else {
-            clearInvalidMessage(serviceInvalidFeedback);
-            enableElement(submitBtn);
-        }
-
-        // if ((switchs[i].checked && keyword.value.length > 0 && selectCulture.value.length > 0)
-        //     || switchs[i].checked && file.value.length > 0) {
-        //     enableElement(submitBtn);
-        // } else {
-        //     disableElement(submitBtn);
-        // }
+        if ((switchs[i].checked && keyword.value.length > 0 && selectCulture.value.length > 0)
+             || switchs[i].checked && file.value.length > 0) {
+             enableElement(submitBtn);
+         } else {
+             disableElement(submitBtn);
+         }
     });
 }
 

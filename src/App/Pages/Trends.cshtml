@@ -12,6 +12,7 @@
             <select id="select-culture" class="form-control" aria-label="countries" asp-items="Model.Cultures" asp-for="Input.Culture" required>
                 <option value="">-- Seleziona Cultura --</option>
             </select>
+            <small class="small invalid-feedback" id="culture-invalid-feedback"></small>
         </div>
         <hr />
         <button type="submit" id="submit-btn" class="btn btn-outline-primary">
