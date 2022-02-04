@@ -24,7 +24,7 @@ submitBtn.addEventListener('mousedown', () => {
  * @param {HTMLElement} element 
  */
 function disableElement(element) {
-    button.setAttribute('disabled', 'disabled');
+    element.setAttribute('disabled', 'disabled');
 }
 
 /**
@@ -32,5 +32,5 @@ function disableElement(element) {
  * @param {HTMLElement} element 
  */
 function enableElement(element) {
-    button.removeAttribute('disabled');
+    element.removeAttribute('disabled');
 }

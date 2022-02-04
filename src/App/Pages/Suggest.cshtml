@@ -7,11 +7,11 @@
 <form method="post">
     <h4>Seleziona in che modo generare le keyword</h4>
     <div class="form-check">
-        <input class="form-check-input radio-btn" name="suggest-generation-type" type="radio" id="keyword-radio" checked />
+        <input class="form-check-input radio-btn" name="suggest-generation-type" type="radio" id="keyword-radio" checked required />
         <label class="form-check-label" for="keyword-radio">Keyword</label>
     </div>
     <div class="form-check">
-        <input class="form-check-input radio-btn" name="suggest-generation-type" type="radio" id="file-radio" />
+        <input class="form-check-input radio-btn" name="suggest-generation-type" type="radio" id="file-radio" required />
         <label class="form-check-label" for="file-radio">File</label>
     </div>
     <hr />
@@ -21,9 +21,10 @@
         <small class="small invalid-feedback" id="keyword-invalid-feedback"></small>
     </div>
     <div class="form-group col-4 mb-2">
-        <select id="select-culture" class="form-control" aria-label="countries" asp-items="Model.Cultures" asp-for="Input.Culture" >
+        <select id="select-culture" class="form-control" aria-label="countries" asp-items="Model.Cultures" asp-for="Input.Culture">
             <option value="">-- Seleziona Cultura --</option>
         </select>
+        <small class="small invalid-feedback" id="culture-invalid-feedback"></small>
     </div>
     <hr />
     <div class="form-group col-4 mb-2" data-bs-toggle="popover" data-bs-trigger="hover focus" title="Formato file CSV" data-bs-content="Il formato delle colonne del file CSV deve essere del tipo (id, keyword, country, lang)">
@@ -51,6 +52,7 @@
             <input class="form-check-input switch" type="checkbox" asp-for="Input.IsDuckDuckGoSuggest" id="duckduckgo-suggest" />
             <label class="form-check-label" for="duckduckgo-suggest">DuckDuckGo Suggest</label>
         </div>
+        <small class="small invalid-feedback" id="service-invalid-feedback"></small>
     </div>
     <hr />
     <button type="submit" class="btn btn-outline-primary" id="submit-btn">

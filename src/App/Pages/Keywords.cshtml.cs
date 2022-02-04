@@ -98,6 +98,6 @@ public class KeywordsModel : PageModel
     {
         await _mediator.Send(new RankKeywordsQuery());
 
-        return Page();
+        return RedirectToPage("/Keywords");
     }
 }

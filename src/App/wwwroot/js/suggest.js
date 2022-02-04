@@ -4,63 +4,63 @@ const popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
 });
 
 /**
- * @type {HTMLInputElement}
- */
+* @type {HTMLInputElement}
+*/
 const keywordRadio = document.getElementById('keyword-radio');
 
 /**
- * @type {HTMLInputElement}
- */
+* @type {HTMLInputElement}
+*/
 const fileRadio = document.getElementById('file-radio');
 
 /**
- * @type {HTMLInputElement}
- */
+* @type {HTMLInputElement}
+*/
 const keyword = document.getElementById('keyword');
 
 /**
- * @type {HTMLSelectElement}
- */
+* @type {HTMLSelectElement}
+*/
 const selectCulture = document.getElementById('select-culture');
 
 /**
- * @type {HTMLInputElement}
- */
+* @type {HTMLInputElement}
+*/
 const file = document.getElementById('file');
 
 /**
- * @type {HTMLButtonElement}
- */
+* @type {HTMLButtonElement}
+*/
 const submitBtn = document.getElementById('submit-btn');
 
 const keywordInvalidFeedback = document.getElementById('keyword-invalid-feedback');
 const fileInvalidFeedback = document.getElementById('file-invalid-feedback');
+const cultureInvalidFeedback = document.getElementById('culture-invalid-feedback');
+const serviceInvalidFeedback = document.getElementById('service-invalid-feedback');
 
 /**
- * @type {HTMLInputElement}
- */
+* @type {HTMLInputElement}
+*/
 const googleSuggest = document.getElementById('google-suggest');
 
 /**
- * @type {HTMLInputElement}
- */
+* @type {HTMLInputElement}
+*/
 const bingSuggest = document.getElementById('bing-suggest');
 
 /**
- * @type {HTMLInputElement}
- */
+* @type {HTMLInputElement}
+*/
 const duckDuckGoSuggest = document.getElementById('duckduckgo-suggest');
 
 /**
- * @type {HTMLCollectionOf<HTMLInputElement>}
- */
+* @type {HTMLCollectionOf<HTMLInputElement>}
+*/
 const switchs = document.getElementsByClassName('switch');
 
-disableBtn(submitBtn);
+disableElement(submitBtn);
 enableInput(keyword);
 disableInput(file);
-
-let switchesChecked = false; // TODO: completare
 
 keywordRadio.addEventListener('change', () => {
     if (keywordRadio.checked) {
@@ -103,39 +103,76 @@ fileRadio.addEventListener('change', () => {
 });
 
 keyword.addEventListener('input', () => {
-    if (keyword.value.length === 0) {
-        setInvalidMessage(keywordInvalidFeedback, 'La keyword non può essere vuota');
-        setInvalidInput(keyword);
-        disableBtn(submitBtn);
-    } else {
+    if (keyword.value.length > 0) {
         clearInvalidMessage(keywordInvalidFeedback);
         setValidInput(keyword);
-        enableBtn(submitBtn);
+
+        if (switchesChecked() && selectCulture.value.length > 0) {
+            enableElement(submitBtn);
+        } else {
+            disableElement(submitBtn);
+        }
+    } else {
+        setInvalidMessage(keywordInvalidFeedback, 'La keyword non può essere vuota');
+        setInvalidInput(keyword);
+        disableElement(submitBtn);
+    }
+});
+
+selectCulture.addEventListener('change', () => {
+    if (selectCulture.value.length > 0) {
+        setValidInput(selectCulture);
+        clearInvalidMessage(cultureInvalidFeedback);
+
+        if (switchesChecked() && keyword.value.length > 0) {
+            enableElement(submitBtn);
+        } else {
+            disableElement(submitBtn);
+        }
+
+    } else {
+        setInvalidInput(selectCulture);
+        disableElement(submitBtn);
+        setInvalidMessage(cultureInvalidFeedback, 'La cultura non può essere vuota');
     }
 });
 
 file.addEventListener('input', () => {
-    if (file.value.length === 0) {
-        setInvalidMessage(fileInvalidFeedback, "E' necessario selezionare un file");
-        setInvalidInput(file);
-        disableBtn(submitBtn);
-    } else {
+    if (file.value.length > 0) {
         clearInvalidMessage(fileInvalidFeedback);
         setValidInput(file);
-        enableBtn(submitBtn);
+
+        if (switchesChecked()) {
+            enableElement(submitBtn);
+        } else {
+            disableElement(submitBtn);
+        }
+    } else {
+        setInvalidMessage(fileInvalidFeedback, "E' necessario selezionare un file");
+        setInvalidInput(file);
+        disableElement(submitBtn);
     }
 });
 
 for (let i = 0; i < switchs.length; i++) {
     switchs[i].addEventListener('change', () => {
-        if (switchs[i].checked && keyword.length > 0) {
-            enableBtn(submitBtn);
-            switchesChecked = true;
+        if (!switchesChecked()) {
+            setInvalidMessage(serviceInvalidFeedback, 'E\' necessario selezionare almeno un servizio');
+
+            if ((keyword.value.length > 0 && selectCulture.value.length > 0) || file.value.length > 0) {
+                disableElement(submitBtn);
+            }
+        } else {
+            clearInvalidMessage(serviceInvalidFeedback);
+            enableElement(submitBtn);
         }
-        if (!googleSuggest.checked && !bingSuggest.checked && !duckDuckGoSuggest.checked) {
-            disableBtn(submitBtn);
-            switchesChecked = false;
-        }
+
+        // if ((switchs[i].checked && keyword.value.length > 0 && selectCulture.value.length > 0)
+        //     || switchs[i].checked && file.value.length > 0) {
+        //     enableElement(submitBtn);
+        // } else {
+        //     disableElement(submitBtn);
+        // }
     });
 }
 
@@ -143,95 +180,104 @@ submitBtn.addEventListener('mousedown', () => {
     /*disableBtn(submitBtn);*/
     submitBtn.innerText = '';
     submitBtn.innerHTML = `<div class="spinner-border spinner-border-sm text-primary" role="status">
-                               <span class="visually-hidden">Loading...</span>
-                           </div>`;
+    <span class="visually-hidden">Loading...</span>
+    </div>`;
 });
 
+function switchesChecked() {
+    for (let i = 0; i < switchs.length; i++) {
+        if (switchs[i].checked) {
+            return true;
+        }
+    }
+    return false;
+}
+
 /**
- *
- * @param {HTMLInputElement} input
- */
+*
+* @param {HTMLInputElement} input
+*/
 function setRequired(input) {
     input.attributes.setNamedItem(document.createAttribute('required'));
 }
 
 /**
- *
- * @param {HTMLInputElement} input
- */
+*
+* @param {HTMLInputElement} input
+*/
 function unsetRequired(input) {
     input.attributes.removeNamedItem('required');
 }
 
 /**
- * 
- * @param {HTMLButtonElement} button 
- */
-function disableBtn(button) {
-    button.setAttribute('disabled', 'disabled');
+* 
+* @param {HTMLElement} element 
+*/
+function disableElement(element) {
+    element.setAttribute('disabled', 'disabled');
 }
 
 /**
- * 
- * @param {HTMLButtonElement} button 
- */
-function enableBtn(button) {
-    button.removeAttribute('disabled');
+* 
+* @param {HTMLElement} element 
+*/
+function enableElement(element) {
+    element.removeAttribute('disabled');
 }
 
 /**
- * 
- * @param {HTMLElement} element 
- * @param {string} message 
- */
+* 
+* @param {HTMLElement} element 
+* @param {string} message 
+*/
 function setInvalidMessage(element, message) {
     element.innerText = message;
 }
 
 /**
- * 
- * @param {HTMLElement} element 
- */
+* 
+* @param {HTMLElement} element 
+*/
 function clearInvalidMessage(element) {
     element.innerText = '';
 }
 
 /**
- * 
- * @param {HTMLInputElement} input 
- */
+* 
+* @param {HTMLInputElement} input 
+*/
 function setValidInput(input) {
     input.classList.remove('is-invalid');
 }
 
 /**
- * 
- * @param {HTMLInputElement} input 
- */
+* 
+* @param {HTMLInputElement} input 
+*/
 function setInvalidInput(input) {
     input.classList.add('is-invalid');
 }
 
 /**
- * 
- * @param {HTMLInputElement} input 
- */
+* 
+* @param {HTMLInputElement} input 
+*/
 function clearInput(input) {
     input.value = '';
 }
 
 /**
- * 
- * @param {HTMLInputElement} input 
- */
+* 
+* @param {HTMLInputElement} input 
+*/
 function enableInput(input) {
     input.removeAttribute('disabled');
 }
 
 /**
- * 
- * @param {HTMLInputElement} input 
- */
+* 
+* @param {HTMLInputElement} input 
+*/
 function disableInput(input) {
     input.setAttribute('disabled', 'disabled');
 }

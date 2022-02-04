@@ -28,26 +28,3 @@ rankBtn.addEventListener('mousedown', () => {
                            </div>`;
     });
 });
-
-/**
- * Animazione fade in (0.3s)
- * @param {Element} element
- */
-function fadeIn(element) {
-    element.removeAttribute('hidden');
-
-    setTimeout(() => {
-        element.classList.remove('fade-effect');
-    }, 280);
-}
-
-/**
- * Animazione fade out (0.3s)
- * @param {Element} element
- */
-function fadeOut(element) {
-    element.classList.add('fade-effect');
-    setTimeout(() => {
-        element.setAttribute('hidden', '');
-    }, 350);
-}
