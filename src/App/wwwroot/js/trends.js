@@ -17,7 +17,6 @@ selectCulture.addEventListener('change', () => {
 });
 
 submitBtn.addEventListener('mousedown', () => {
-    /*disableBtn(submitBtn);*/
     submitBtn.innerText = '';
     submitBtn.innerHTML = `<div class="spinner-border spinner-border-sm text-primary" role="status">
                                <span class="visually-hidden">Loading...</span>
