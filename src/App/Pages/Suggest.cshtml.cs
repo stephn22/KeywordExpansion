@@ -56,7 +56,6 @@ public class SuggestModel : PageModel
                     _configuration["WebShare:Password"],
                     _configuration["WebShare:ProxyAddress"],
                     KeywordConstants.MaxLength,
-                    new CsvFileReader(),
                     _mediator,
                     string.IsNullOrEmpty(Input.File) ? null : Input.File);
 
@@ -64,7 +63,7 @@ public class SuggestModel : PageModel
                 {
                     var language = Input.Culture[..Input.Culture.IndexOf('-')];
                     var country = Input.Culture[(Input.Culture.IndexOf('-') + 1)..];
-                    await suggestApiGoogle.Suggest(Input.Depth, Input.Keyword, language, country);
+                    await suggestApiGoogle.GetKeywords(Input.Keyword, language, country, Input.Depth);
                 }
                 else if (!string.IsNullOrEmpty(Input.File))
                 {
@@ -76,7 +75,6 @@ public class SuggestModel : PageModel
             {
                 var suggestApiBing = new BingSuggestApi(
                     KeywordConstants.MaxLength,
-                    new CsvFileReader(),
                     _mediator,
                     string.IsNullOrEmpty(Input.File) ? null : Input.File);
 
@@ -84,7 +82,7 @@ public class SuggestModel : PageModel
                 {
                     var language = Input.Culture[..Input.Culture.IndexOf('-')];
                     var country = Input.Culture[(Input.Culture.IndexOf('-') + 1)..];
-                    await suggestApiBing.Suggest(Input.Depth, Input.Keyword, language, country);
+                    await suggestApiBing.GetKeywords(Input.Keyword, language, country, Input.Depth);
                 }
                 else if (!string.IsNullOrEmpty(Input.File))
                 {
@@ -96,7 +94,6 @@ public class SuggestModel : PageModel
             {
                 var suggestApiDuckDuckGo = new DuckDuckGoSuggestApi(
                     KeywordConstants.MaxLength,
-                    new CsvFileReader(),
                     _mediator,
                     string.IsNullOrEmpty(Input.File) ? null : Input.File);
 
@@ -104,7 +101,7 @@ public class SuggestModel : PageModel
                 {
                     var language = Input.Culture[..Input.Culture.IndexOf('-')];
                     var country = Input.Culture[(Input.Culture.IndexOf('-') + 1)..];
-                    await suggestApiDuckDuckGo.Suggest(Input.Depth, Input.Keyword, language, country);
+                    await suggestApiDuckDuckGo.GetKeywords(Input.Keyword, language, country, Input.Depth);
                 }
                 else if (!string.IsNullOrEmpty(Input.File))
                 {

@@ -8,8 +8,8 @@ namespace Infrastructure.Services.DuckDuckGoSuggest;
 public class DuckDuckGoSuggestApi : SuggestApi
 {
 
-    public DuckDuckGoSuggestApi(int seedLength, ICsvFileReader csvFileReader, IMediator mediator, string? filePath = null)
-        : base(seedLength, csvFileReader, mediator, filePath)
+    public DuckDuckGoSuggestApi(int seedLength, IMediator mediator, string? filePath = null)
+        : base(seedLength, mediator, filePath)
     { }
 
     public override async Task<IEnumerable<string>> GetSuggestions(string seed, string language, string country, int seedLength)

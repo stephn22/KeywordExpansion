@@ -16,16 +16,14 @@ public class GoogleSuggestApi : SuggestApi
         string password,
         string proxyAddress,
         int seedLength,
-        ICsvFileReader csvFileReader,
         IMediator mediator,
         string? filePath = null)
-        : base(seedLength, csvFileReader, mediator, filePath)
+        : base(seedLength, mediator, filePath)
     {
         _username = username;
         _password = password;
         _proxyAddress = proxyAddress;
     }
-
 
     public override async Task<IEnumerable<string>> GetSuggestions(string seed, string language, string country, int seedLength)
     {

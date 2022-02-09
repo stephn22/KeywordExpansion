@@ -5,6 +5,7 @@ using Infrastructure.Services.Extensions;
 using MediatR;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using Infrastructure.File;
 
 namespace Infrastructure.Services;
 
@@ -19,14 +20,14 @@ public abstract class SuggestApi : ISuggestApi
     private readonly string _filePath;
     private readonly IMediator _mediator;
 
-    protected SuggestApi(int seedLength, ICsvFileReader csvFileReader, IMediator mediator, string? filePath = null)
+    protected SuggestApi(int seedLength, IMediator mediator, string? filePath = null)
     {
         _seedLength = seedLength;
         _keywordsBag = new ConcurrentBag<string>();
         _parallelOptions = new ParallelOptions();
         _parallelDegree = 3;
         _requestsStopwatch = new Stopwatch();
-        _csvFileReader = csvFileReader;
+        _csvFileReader = new CsvFileReader();
         _filePath = filePath ?? string.Empty;
         _mediator = mediator;
     }
@@ -96,11 +97,6 @@ public abstract class SuggestApi : ISuggestApi
                 }
             });
         }
-    }
-
-    public async Task Suggest(int depth, string keyword, string language, string country)
-    {
-        await GetKeywords(keyword, language, country, depth);
     }
 
     public async Task GetKeywords(string seed, string language, string country, int depth)

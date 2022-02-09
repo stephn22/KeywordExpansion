@@ -7,13 +7,11 @@ namespace Infrastructure.Services.BingSuggest;
 
 public class BingSuggestApi : SuggestApi
 {
-
     public BingSuggestApi(
         int seedLength,
-        ICsvFileReader csvFileReader,
         IMediator mediator,
         string? filePath = null)
-        : base(seedLength, csvFileReader, mediator, filePath)
+        : base(seedLength, mediator, filePath)
     { }
 
     public override async Task<IEnumerable<string>> GetSuggestions(string seed, string language, string country, int seedLength)
