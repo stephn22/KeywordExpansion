@@ -10,10 +10,12 @@ namespace App.Pages;
 public class TrendsModel : PageModel
 {
     private readonly IMediator _mediator;
+    private readonly ILogger<TrendsModel> _logger;
 
-    public TrendsModel(IMediator mediator)
+    public TrendsModel(IMediator mediator, ILogger<TrendsModel> logger)
     {
         _mediator = mediator;
+        _logger = logger;
     }
 
     public SelectList Cultures => new(Utilities.CultureList(), "Key", "Value");
@@ -36,9 +38,10 @@ public class TrendsModel : PageModel
             using var driver = ChromiumDriverExtensions.GetChromiumDriver();
             await driver.ExplorePage(_mediator, Input.Culture);
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            return RedirectToPage("/Keywords");
+            _logger.LogError("{@Exception}", e);
+            return RedirectToPage("/Error");
         }
 
         return RedirectToPage("/Keywords");

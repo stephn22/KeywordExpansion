@@ -1,7 +1,6 @@
-﻿using System.Net;
-using Application.Common.Interfaces;
-using MediatR;
+﻿using MediatR;
 using Newtonsoft.Json.Linq;
+using System.Net;
 
 namespace Infrastructure.Services.BingSuggest;
 

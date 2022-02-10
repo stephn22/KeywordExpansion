@@ -61,7 +61,7 @@ public class Startup
         }
     }
 
-    private async void ElectronBootstrap(IHostEnvironment env)
+    private static async void ElectronBootstrap(IHostEnvironment env)
     {
         var browserWindow = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions
         {
@@ -73,8 +73,6 @@ public class Startup
         });
 
         await browserWindow.WebContents.Session.ClearCacheAsync();
-        await browserWindow.WebContents.Session.ClearStorageDataAsync();
-        await browserWindow.WebContents.Session.ClearHostResolverCacheAsync();
 
         browserWindow.OnReadyToShow += () => browserWindow.Show();
         browserWindow.SetTitle("Keyword Expansion");

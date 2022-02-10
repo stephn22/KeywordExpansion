@@ -1,7 +1,5 @@
-using Application.Common.Interfaces;
 using Application.Common.Services.Util;
 using Domain.Constants;
-using Infrastructure.File;
 using Infrastructure.Services.BingSuggest;
 using Infrastructure.Services.DuckDuckGoSuggest;
 using Infrastructure.Services.GoogleSuggest;
@@ -17,12 +15,12 @@ public class SuggestModel : PageModel
     private readonly IMediator _mediator;
     private readonly IConfiguration _configuration;
     private readonly ILogger<SuggestModel> _logger;
-    private ISuggestApi _suggestApi;
 
-    public SuggestModel(IMediator mediator, IConfiguration configuration)
+    public SuggestModel(IMediator mediator, IConfiguration configuration, ILogger<SuggestModel> logger)
     {
         _mediator = mediator;
         _configuration = configuration;
+        _logger = logger;
     }
 
     [BindProperty]
@@ -109,9 +107,10 @@ public class SuggestModel : PageModel
                 }
             }
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            return RedirectToPage("/Keywords");
+            _logger.LogError("{@Exception}", e);
+            return RedirectToPage("/Error");
         }
 
         return RedirectToPage("/Keywords");
