@@ -1,4 +1,6 @@
+using System;
 using Application.Common.Models;
+using Application.Keywords.Queries.ExportKeywords;
 using Application.Keywords.Queries.GetKeywords;
 using Application.Keywords.Queries.RankKeywords;
 using Domain.Entities;
@@ -13,6 +15,7 @@ public class KeywordsModel : PageModel
 {
     private readonly IMediator _mediator;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<KeywordsModel> _logger;
     private const string IdDesc = "id_desc";
     private const string ValueDesc = "value_desc";
     private const string StartingSeedDesc = "startingseed_desc";
@@ -22,10 +25,11 @@ public class KeywordsModel : PageModel
     private const string TimeStampDesc = "timestamp_desc";
     private const string SuggestServiceDesc = "suggestservice_desc";
 
-    public KeywordsModel(IMediator mediator, IConfiguration configuration)
+    public KeywordsModel(IMediator mediator, IConfiguration configuration, ILogger<KeywordsModel> logger)
     {
         _mediator = mediator;
         _configuration = configuration;
+        _logger = logger;
     }
 
     public PaginatedList<Keyword> Keywords { get; set; }
@@ -96,8 +100,22 @@ public class KeywordsModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        await _mediator.Send(new RankKeywordsQuery());
+        try
+        {
+            await _mediator.Send(new RankKeywordsQuery());
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("{@Exception}", e);
+            return RedirectToPage("/Error");
+        }
 
-        return RedirectToPage("/Keywords");
+        return Page();
+    }
+
+    public async Task<FileResult> OnPostSaveAsync()
+    {
+        var vm = await _mediator.Send(new ExportKeywordsQuery());
+        return File(vm.Content, vm.ContentType, vm.FileName);
     }
 }

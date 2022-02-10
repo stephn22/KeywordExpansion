@@ -5,8 +5,8 @@ namespace Application.Keywords.Queries.ExportKeywords;
 
 public class KeywordRecord : IMapFrom<Keyword>
 {
-    public int id { get; set; }
-    public string keyword { get; set; }
-    public string country { get; set; }
-    public string  lang { get; set; }
+    public int Id { get; set; }
+    public string Value { get; set; }
+    public string Culture { get; set; }
+    public string  Ranking { get; set; }
 }

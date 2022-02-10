@@ -47,7 +47,10 @@ public abstract class SuggestApi : ISuggestApi
                 try
                 {
                     _parallelDegree++;
-                    await GetKeywords(record.keyword, record.lang, record.country, depth);
+
+                    var language = record.Culture[..record.Culture.IndexOf('-')];
+                    var country = record.Culture[(record.Culture.IndexOf('-') + 1)..];
+                    await GetKeywords(record.Value, language, country, depth);
                 }
                 catch (Exception e)
                 {
@@ -110,6 +113,7 @@ public abstract class SuggestApi : ISuggestApi
                 if (!_keywordsBag.Contains(suggestion))
                 {
                     _keywordsBag.Add(suggestion);
+                    Console.WriteLine(suggestion);
 
                     // crea un nuovo dbcontext
                     var optionsBuilder = ContextExtensions.GetOptionsBuilder();
