@@ -44,7 +44,7 @@ public class KeywordsModel : PageModel
     public string CurrentSort { get; set; }
     public string CurrentFilter { get; set; }
 
-    public async Task<IActionResult> OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex, string? errorMessage)
+    public async Task<IActionResult> OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
     {
         CurrentSort = sortOrder;
 
@@ -56,7 +56,7 @@ public class KeywordsModel : PageModel
         TimeStampSort = sortOrder == TimeStamp ? TimeStampDesc : TimeStamp;
         SuggestServiceSort = string.IsNullOrEmpty(sortOrder) ? SuggestServiceDesc : "";
 
-        ErrorMessage = errorMessage ?? "";
+        ErrorMessage = HttpContext.Session.GetString("errorMessage") ?? "";
 
         if (searchString != null)
         {

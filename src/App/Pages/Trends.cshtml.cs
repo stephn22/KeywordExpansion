@@ -41,7 +41,10 @@ public class TrendsModel : PageModel
         catch (Exception e)
         {
             _logger.LogError("{@Exception}", e);
-            return RedirectToPage("/Keywords", routeValues: e.ToString());
+
+            HttpContext.Session.SetString("errorMessage", e.ToString());
+
+            return RedirectToPage("/Keywords");
         }
 
         return RedirectToPage("/Keywords");

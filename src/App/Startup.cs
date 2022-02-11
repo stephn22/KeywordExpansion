@@ -20,6 +20,15 @@ public class Startup
         services.AddApplication();
         services.AddInfrastructure(Configuration);
 
+        services.AddDistributedMemoryCache();
+
+        services.AddSession(options =>
+        {
+            options.IdleTimeout = TimeSpan.FromSeconds(10);
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+        });
+
         services.AddElectron();
 
         services.AddDatabaseDeveloperPageExceptionFilter();
@@ -48,6 +57,8 @@ public class Startup
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseRouting();
+
+        app.UseSession();
 
         app.UseEndpoints(endpoints =>
         {
