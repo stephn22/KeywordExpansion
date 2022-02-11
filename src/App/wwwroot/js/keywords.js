@@ -6,7 +6,7 @@ const exportBtn = document.getElementById('export-keywords');
 
 rankBtn.addEventListener('click', () => {
     rankBtn.innerText = '';
-    rankBtn.innerHTML = `<div class="spinner-border spinner-border-sm text-secondary" role="status">
+    rankBtn.innerHTML = `<div class="spinner-border spinner-border-sm text-light" role="status">
                                <span class="visually-hidden">Loading...</span>
                            </div>`;
 });

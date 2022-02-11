@@ -18,7 +18,7 @@ selectCulture.addEventListener('change', () => {
 
 submitBtn.addEventListener('click', () => {
     submitBtn.innerText = '';
-    submitBtn.innerHTML = `<div class="spinner-border spinner-border-sm text-primary" role="status">
+    submitBtn.innerHTML = `<div class="spinner-border spinner-border-sm text-light" role="status">
                                <span class="visually-hidden">Loading...</span>
                            </div>`;
 });
