@@ -1,14 +1,15 @@
-﻿using System.Net;
-using Application.Common.Interfaces;
-using MediatR;
+﻿using MediatR;
 using Newtonsoft.Json.Linq;
+using System.Net;
 
 namespace Infrastructure.Services.DuckDuckGoSuggest;
 
 public class DuckDuckGoSuggestApi : SuggestApi
 {
-
-    public DuckDuckGoSuggestApi(int seedLength, IMediator mediator, string? filePath = null)
+    public DuckDuckGoSuggestApi(
+        int seedLength,
+        IMediator mediator,
+        string? filePath = null)
         : base(seedLength, mediator, filePath)
     { }
 

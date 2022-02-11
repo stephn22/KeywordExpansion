@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Newtonsoft.Json.Linq;
 using System.Net;
+using Newtonsoft.Json;
 
 namespace Infrastructure.Services.BingSuggest;
 
@@ -17,7 +18,8 @@ public class BingSuggestApi : SuggestApi
     {
         using var client = new HttpClient();
 
-        var url = $"https://api.bing.com/osjson.aspx?query={seed}&mkt={language}-{country.ToUpperInvariant()}";
+        var url =
+            $"https://api.bing.com/osjson.aspx?query={seed}&mkt={language}-{country.ToUpperInvariant()}";
 
         using var response = await client.GetAsync(url);
 
@@ -25,7 +27,6 @@ public class BingSuggestApi : SuggestApi
 
         if (!response.IsSuccessStatusCode)
         {
-
             if (response.StatusCode == HttpStatusCode.TooManyRequests)
             {
                 TooManyRequestsCounter++;
@@ -41,7 +42,7 @@ public class BingSuggestApi : SuggestApi
         {
             if (values.HasValues)
             {
-                suggestions.AddRange(values.Values<string?>().Where(value => value?.Length >= seedLength)!);
+                suggestions.AddRange(values.Values<string?>().Where(value => value?.Length <= seedLength)!);
             }
         }
 

@@ -69,7 +69,7 @@ public class SuggestModel : PageModel
                 }
             }
 
-            if (Input.IsBingSuggest) // TODO: fix
+            if (Input.IsBingSuggest)
             {
                 var suggestApiBing = new BingSuggestApi(
                     KeywordConstants.MaxLength,

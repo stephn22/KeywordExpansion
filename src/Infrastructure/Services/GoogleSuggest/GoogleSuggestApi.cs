@@ -1,7 +1,6 @@
-﻿using System.Net;
+﻿using MediatR;
+using System.Net;
 using System.Xml.Linq;
-using Application.Common.Interfaces;
-using MediatR;
 
 namespace Infrastructure.Services.GoogleSuggest;
 

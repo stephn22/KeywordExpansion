@@ -2,7 +2,6 @@
 
 public interface ISuggestApi
 {
-
     /// <summary>
     /// Espande le keyword utilizzando il csvfile reader
     /// </summary>
