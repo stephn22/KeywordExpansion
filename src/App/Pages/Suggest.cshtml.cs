@@ -110,7 +110,7 @@ public class SuggestModel : PageModel
         catch (Exception e)
         {
             _logger.LogError("{@Exception}", e);
-            return RedirectToPage("/Error");
+            return RedirectToPage("/Keywords", routeValues: e.ToString());
         }
 
         return RedirectToPage("/Keywords");

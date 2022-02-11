@@ -1,4 +1,4 @@
-using System;
+using Application.Common.Exceptions;
 using Application.Common.Models;
 using Application.Keywords.Queries.ExportKeywords;
 using Application.Keywords.Queries.GetKeywords;
@@ -33,6 +33,7 @@ public class KeywordsModel : PageModel
     }
 
     public PaginatedList<Keyword> Keywords { get; set; }
+    public string ErrorMessage { get; set; }
     public string IdSort { get; set; }
     public string ValueSort { get; set; }
     public string StartingSeedSort { get; set; }
@@ -43,10 +44,9 @@ public class KeywordsModel : PageModel
     public string CurrentSort { get; set; }
     public string CurrentFilter { get; set; }
 
-    public async Task<IActionResult> OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex)
+    public async Task<IActionResult> OnGetAsync(string sortOrder, string currentFilter, string searchString, int? pageIndex, string? errorMessage)
     {
         CurrentSort = sortOrder;
-
 
         IdSort = string.IsNullOrEmpty(sortOrder) ? IdDesc : "";
         ValueSort = string.IsNullOrEmpty(sortOrder) ? ValueDesc : "";
@@ -55,6 +55,8 @@ public class KeywordsModel : PageModel
         RankingSort = string.IsNullOrEmpty(sortOrder) ? RankingDesc : "";
         TimeStampSort = sortOrder == TimeStamp ? TimeStampDesc : TimeStamp;
         SuggestServiceSort = string.IsNullOrEmpty(sortOrder) ? SuggestServiceDesc : "";
+
+        ErrorMessage = errorMessage ?? "";
 
         if (searchString != null)
         {
@@ -106,8 +108,13 @@ public class KeywordsModel : PageModel
         }
         catch (Exception e)
         {
+            if (e.GetType() == typeof(ValidationException))
+            {
+                return Page();
+            }
+
             _logger.LogError("{@Exception}", e);
-            return RedirectToPage("/Error");
+            return RedirectToPage("/Keywords", routeValues: e.ToString());
         }
 
         return Page();

@@ -5,6 +5,13 @@
     ViewData["Title"] = "Keywords";
 }
 
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.ErrorMessage
+    </div>
+}
+
 <h4>Tutte le keywords trovate</h4>
 
 @if (Model.Keywords != null)

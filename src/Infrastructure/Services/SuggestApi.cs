@@ -63,11 +63,6 @@ public abstract class SuggestApi : ISuggestApi
 
                         await Task.Delay(10000, cancellationToken);
                     }
-                    //if (e.GetType() == typeof(TaskCanceledException) &&
-                    //    e.InnerException?.GetType() != typeof(TimeoutException))
-                    //{
-                    //    throw;
-                    //}
                 }
                 finally
                 {
