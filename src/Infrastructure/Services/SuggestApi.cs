@@ -6,6 +6,7 @@ using MediatR;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using Infrastructure.File;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Services;
 
@@ -19,6 +20,7 @@ public abstract class SuggestApi : ISuggestApi
     private readonly ICsvFileReader _csvFileReader;
     private readonly string _filePath;
     private readonly IMediator _mediator;
+    private readonly ILogger<SuggestApi> _logger;
 
     protected SuggestApi(int seedLength, IMediator mediator, string? filePath = null)
     {
@@ -30,6 +32,7 @@ public abstract class SuggestApi : ISuggestApi
         _csvFileReader = new CsvFileReader();
         _filePath = filePath ?? string.Empty;
         _mediator = mediator;
+        _logger = new Logger<SuggestApi>(new LoggerFactory());
     }
 
     protected int TooManyRequestsCounter { get; set; }
@@ -39,7 +42,7 @@ public abstract class SuggestApi : ISuggestApi
         if (!string.IsNullOrEmpty(_filePath))
         {
             var records = _csvFileReader.ReadKeywordsFromFile(_filePath);
-
+            
             _requestsStopwatch.Start();
 
             await Parallel.ForEachAsync(records, _parallelOptions, async (record, cancellationToken) =>
@@ -108,7 +111,7 @@ public abstract class SuggestApi : ISuggestApi
                 if (!_keywordsBag.Contains(suggestion))
                 {
                     _keywordsBag.Add(suggestion);
-                    Console.WriteLine(suggestion);
+                    _logger.LogInformation("{@Suggestion}", suggestion);
 
                     // crea un nuovo dbcontext
                     var optionsBuilder = ContextExtensions.GetOptionsBuilder();

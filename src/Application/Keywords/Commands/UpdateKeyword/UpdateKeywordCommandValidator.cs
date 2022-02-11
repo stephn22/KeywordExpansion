@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Domain.Constants;
+using FluentValidation;
 
 namespace Application.Keywords.Commands.UpdateKeyword;
 
@@ -7,7 +8,11 @@ public class UpdateKeywordCommandValidator : AbstractValidator<UpdateKeywordComm
     public UpdateKeywordCommandValidator()
     {
         RuleFor(k => k.Value)
-            .NotEmpty();
+            .MaximumLength(KeywordConstants.MaxLength);
+            //.NotEmpty();
+
+            RuleFor(k => k.StartingSeed)
+                .MaximumLength(KeywordConstants.MaxLength);
 
         RuleFor(k => k.Ranking)
             .GreaterThanOrEqualTo(0);

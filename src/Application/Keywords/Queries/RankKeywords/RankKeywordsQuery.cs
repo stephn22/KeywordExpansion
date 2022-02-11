@@ -22,7 +22,13 @@ public class RankKeywordsQueryHandler : IRequestHandler<RankKeywordsQuery>
     {
         var keywords = await _mediator.Send(new GetKeywordsQuery(), cancellationToken);
 
-        foreach (var keyword in keywords)
+        var parallelOptions = new ParallelOptions
+        {
+            MaxDegreeOfParallelism = 4,
+            CancellationToken = cancellationToken
+        };
+
+        await Parallel.ForEachAsync(keywords, parallelOptions, async (keyword, cancellationToken) =>
         {
             var rank = await BingAdsUtil.GetBingAdsAsync(keyword.Value, keyword.Culture, cancellationToken);
 
@@ -36,7 +42,7 @@ public class RankKeywordsQueryHandler : IRequestHandler<RankKeywordsQuery>
                 Timestamp = keyword.Timestamp,
                 Value = keyword.Value
             }, cancellationToken);
-        }
+        });
 
         return Unit.Value;
     }

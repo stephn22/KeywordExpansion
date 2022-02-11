@@ -84,6 +84,8 @@ public class Startup
         });
 
         await browserWindow.WebContents.Session.ClearCacheAsync();
+        
+        Electron.NativeTheme.SetThemeSource(ThemeSourceMode.System);
 
         browserWindow.OnReadyToShow += () => browserWindow.Show();
         browserWindow.SetTitle("Keyword Expansion");

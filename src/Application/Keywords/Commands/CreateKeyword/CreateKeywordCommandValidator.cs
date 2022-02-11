@@ -9,7 +9,7 @@ public class CreateKeywordCommandValidator : AbstractValidator<CreateKeywordComm
     {
         RuleFor(k => k.Value)
             .MaximumLength(KeywordConstants.MaxLength);
-            //.NotEmpty();
+        //.NotEmpty();
 
         RuleFor(k => k.StartingSeed)
             .MaximumLength(KeywordConstants.MaxLength);

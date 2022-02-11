@@ -8,6 +8,9 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System;
+using ElectronNET.API;
+using ElectronNET.API.Entities;
 
 namespace App.Pages;
 
@@ -114,8 +117,16 @@ public class KeywordsModel : PageModel
             }
 
             _logger.LogError("{@Exception}", e);
-            return RedirectToPage("/Keywords", routeValues: e.ToString());
+            HttpContext.Session.SetString("errorMessage", e.Message);
+
+            Electron.Notification
+                .Show(new NotificationOptions(_configuration["AppName"], "Il ranking delle keyword è terminato con errore"));
+
+            return RedirectToPage("/Keywords");
         }
+
+        Electron.Notification
+            .Show(new NotificationOptions(_configuration["AppName"], "Il ranking delle keyword è stato effettuato con successo"));
 
         return Page();
     }

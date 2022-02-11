@@ -1,4 +1,6 @@
 using Application.Common.Services.Util;
+using ElectronNET.API;
+using ElectronNET.API.Entities;
 using Infrastructure.Services.Driver.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +13,13 @@ public class TrendsModel : PageModel
 {
     private readonly IMediator _mediator;
     private readonly ILogger<TrendsModel> _logger;
+    private readonly IConfiguration _configuration;
 
-    public TrendsModel(IMediator mediator, ILogger<TrendsModel> logger)
+    public TrendsModel(IMediator mediator, ILogger<TrendsModel> logger, IConfiguration configuration)
     {
         _mediator = mediator;
         _logger = logger;
+        _configuration = configuration;
     }
 
     public SelectList Cultures => new(Utilities.CultureList(), "Key", "Value");
@@ -42,10 +46,16 @@ public class TrendsModel : PageModel
         {
             _logger.LogError("{@Exception}", e);
 
-            HttpContext.Session.SetString("errorMessage", e.ToString());
+            HttpContext.Session.SetString("errorMessage", e.Message);
+
+            Electron.Notification
+                .Show(new NotificationOptions(_configuration["AppName"], "La ricerca delle keyword con Google Realtime Trends è terminata con errore"));
 
             return RedirectToPage("/Keywords");
         }
+
+        Electron.Notification
+            .Show(new NotificationOptions(_configuration["AppName"], "La ricerca delle keyword con Google Realtime Trends è terminata con successo"));
 
         return RedirectToPage("/Keywords");
     }

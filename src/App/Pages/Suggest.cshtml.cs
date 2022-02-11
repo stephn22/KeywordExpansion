@@ -1,5 +1,7 @@
 using Application.Common.Services.Util;
 using Domain.Constants;
+using ElectronNET.API;
+using ElectronNET.API.Entities;
 using Infrastructure.Services.BingSuggest;
 using Infrastructure.Services.DuckDuckGoSuggest;
 using Infrastructure.Services.GoogleSuggest;
@@ -111,10 +113,15 @@ public class SuggestModel : PageModel
         {
             _logger.LogError("{@Exception}", e);
 
-            HttpContext.Session.SetString("errorMessage", e.ToString());
+            HttpContext.Session.SetString("errorMessage", e.Message);
+            Electron.Notification
+                .Show(new NotificationOptions(_configuration["AppName"], "La ricerca delle keyword è terminata con errore"));
 
             return RedirectToPage("/Keywords");
         }
+
+        Electron.Notification
+            .Show(new NotificationOptions(_configuration["AppName"], "La ricerca delle keyword è terminata con successo"));
 
         return RedirectToPage("/Keywords");
     }
