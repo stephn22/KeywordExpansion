@@ -49,13 +49,21 @@ public class TrendsModel : PageModel
             HttpContext.Session.SetString("errorMessage", e.Message);
 
             Electron.Notification
-                .Show(new NotificationOptions(_configuration["AppName"], "La ricerca delle keyword con Google Realtime Trends è terminata con errore"));
+                .Show(new NotificationOptions(_configuration["AppName"], "La ricerca delle keyword con Google Realtime Trends è terminata con errore")
+                {
+                    Icon = _configuration["AppIconPath"],
+                    OnClick = () => Electron.App.Focus()
+                });
 
             return RedirectToPage("/Keywords");
         }
 
         Electron.Notification
-            .Show(new NotificationOptions(_configuration["AppName"], "La ricerca delle keyword con Google Realtime Trends è terminata con successo"));
+            .Show(new NotificationOptions(_configuration["AppName"], "La ricerca delle keyword con Google Realtime Trends è terminata con successo")
+            {
+                Icon = _configuration["AppIconPath"],
+                OnClick = () => Electron.App.Focus()
+            });
 
         return RedirectToPage("/Keywords");
     }

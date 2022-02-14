@@ -1,10 +1,11 @@
+using App.Services;
 using Application.Common.Services.Util;
 using Domain.Constants;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
-using Infrastructure.Services.BingSuggest;
-using Infrastructure.Services.DuckDuckGoSuggest;
-using Infrastructure.Services.GoogleSuggest;
+using Infrastructure.Services.Suggest.BingSuggest;
+using Infrastructure.Services.Suggest.DuckDuckGoSuggest;
+using Infrastructure.Services.Suggest.GoogleSuggest;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -33,7 +34,7 @@ public class SuggestModel : PageModel
     public class InputModel
     {
         public string Keyword { get; set; }
-        public string File { get; set; }
+        public IFormFile File { get; set; }
         public bool IsGoogleSuggest { get; set; }
         public bool IsBingSuggest { get; set; }
         public bool IsDuckDuckGoSuggest { get; set; }
@@ -47,6 +48,13 @@ public class SuggestModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
+        string? path = null;
+
+        if (Input.File != null)
+        {
+            path = await FileUpload.ProcessUploadedFile(Input.File);
+        }
+
         try
         {
             if (Input.IsGoogleSuggest)
@@ -57,7 +65,7 @@ public class SuggestModel : PageModel
                     _configuration["WebShare:ProxyAddress"],
                     KeywordConstants.MaxLength,
                     _mediator,
-                    string.IsNullOrEmpty(Input.File) ? null : Input.File);
+                    path);
 
                 if (!string.IsNullOrEmpty(Input.Keyword))
                 {
@@ -65,9 +73,10 @@ public class SuggestModel : PageModel
                     var country = Input.Culture[(Input.Culture.IndexOf('-') + 1)..];
                     await suggestApiGoogle.GetKeywords(Input.Keyword, language, country, Input.Depth);
                 }
-                else if (!string.IsNullOrEmpty(Input.File))
+                else if (Input.File != null)
                 {
                     await suggestApiGoogle.Suggest(Input.Depth);
+
                 }
             }
 
@@ -76,7 +85,7 @@ public class SuggestModel : PageModel
                 var suggestApiBing = new BingSuggestApi(
                     KeywordConstants.MaxLength,
                     _mediator,
-                    string.IsNullOrEmpty(Input.File) ? null : Input.File);
+                    path);
 
                 if (!string.IsNullOrEmpty(Input.Keyword))
                 {
@@ -84,7 +93,7 @@ public class SuggestModel : PageModel
                     var country = Input.Culture[(Input.Culture.IndexOf('-') + 1)..];
                     await suggestApiBing.GetKeywords(Input.Keyword, language, country, Input.Depth);
                 }
-                else if (!string.IsNullOrEmpty(Input.File))
+                else if (Input.File != null)
                 {
                     await suggestApiBing.Suggest(Input.Depth);
                 }
@@ -95,7 +104,7 @@ public class SuggestModel : PageModel
                 var suggestApiDuckDuckGo = new DuckDuckGoSuggestApi(
                     KeywordConstants.MaxLength,
                     _mediator,
-                    string.IsNullOrEmpty(Input.File) ? null : Input.File);
+                    path);
 
                 if (!string.IsNullOrEmpty(Input.Keyword))
                 {
@@ -103,7 +112,7 @@ public class SuggestModel : PageModel
                     var country = Input.Culture[(Input.Culture.IndexOf('-') + 1)..];
                     await suggestApiDuckDuckGo.GetKeywords(Input.Keyword, language, country, Input.Depth);
                 }
-                else if (!string.IsNullOrEmpty(Input.File))
+                else if (Input.File != null)
                 {
                     await suggestApiDuckDuckGo.Suggest(Input.Depth);
                 }
@@ -115,13 +124,21 @@ public class SuggestModel : PageModel
 
             HttpContext.Session.SetString("errorMessage", e.Message);
             Electron.Notification
-                .Show(new NotificationOptions(_configuration["AppName"], "La ricerca delle keyword è terminata con errore"));
+                .Show(new NotificationOptions(_configuration["AppName"], "La ricerca delle keyword è terminata con errore")
+                {
+                    Icon = _configuration["AppIconPath"],
+                    OnClick = () => Electron.App.Focus()
+                });
 
             return RedirectToPage("/Keywords");
         }
 
         Electron.Notification
-            .Show(new NotificationOptions(_configuration["AppName"], "La ricerca delle keyword è terminata con successo"));
+            .Show(new NotificationOptions(_configuration["AppName"], "La ricerca delle keyword è terminata con successo")
+            {
+                Icon = _configuration["AppIconPath"],
+                OnClick = () => Electron.App.Focus()
+            });
 
         return RedirectToPage("/Keywords");
     }

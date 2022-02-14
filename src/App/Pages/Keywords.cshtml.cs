@@ -76,7 +76,7 @@ public class KeywordsModel : PageModel
 
         if (!string.IsNullOrEmpty(searchString))
         {
-            keywordsIq = keywordsIq.Where(k => k.Value.Contains(searchString)
+            keywordsIq = keywordsIq.Where(k => k.Value.Contains(searchString) || k.StartingSeed.Contains(searchString)
                                                || k.Culture.Contains(searchString) || k.SuggestService.Contains(searchString));
         }
 
@@ -87,11 +87,11 @@ public class KeywordsModel : PageModel
                 IdDesc => keywordsIq.OrderByDescending(k => k.Id),
                 ValueDesc => keywordsIq.OrderByDescending(k => k.Value),
                 StartingSeedDesc => keywordsIq.OrderByDescending(k => k.StartingSeed),
-                CultureDesc => keywordsIq.OrderByDescending(k => k.Culture),
+                CultureDesc => keywordsIq.OrderBy(k => k.Culture),
                 RankingDesc => keywordsIq.OrderByDescending(k => k.Ranking),
                 TimeStamp => keywordsIq.OrderBy(k => k.Timestamp),
                 TimeStampDesc => keywordsIq.OrderByDescending(k => k.Timestamp),
-                SuggestServiceDesc => keywordsIq.OrderByDescending(k => k.SuggestService),
+                SuggestServiceDesc => keywordsIq.OrderBy(k => k.SuggestService),
                 _ => keywordsIq.OrderBy(k => k.Id)
             };
 
@@ -120,13 +120,21 @@ public class KeywordsModel : PageModel
             HttpContext.Session.SetString("errorMessage", e.Message);
 
             Electron.Notification
-                .Show(new NotificationOptions(_configuration["AppName"], "Il ranking delle keyword è terminato con errore"));
+                .Show(new NotificationOptions(_configuration["AppName"], "Il ranking delle keyword è terminato con errore")
+                {
+                    Icon = _configuration["AppIconPath"],
+                    OnClick = () => Electron.App.Focus()
+                });
 
             return RedirectToPage("/Keywords");
         }
 
         Electron.Notification
-            .Show(new NotificationOptions(_configuration["AppName"], "Il ranking delle keyword è stato effettuato con successo"));
+            .Show(new NotificationOptions(_configuration["AppName"], "Il ranking delle keyword è stato effettuato con successo")
+            {
+                Icon = _configuration["AppIconPath"],
+                OnClick = () => Electron.App.Focus()
+            });
 
         return Page();
     }

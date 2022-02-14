@@ -4,6 +4,7 @@ using MediatR;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Edge;
 using System.Collections.Concurrent;
+using System.Globalization;
 using OpenQA.Selenium.Support.UI;
 
 namespace Infrastructure.Services.Driver.Extensions;
@@ -39,7 +40,10 @@ public static class ChromiumDriverExtensions
             geo = "GB";
         }
 
-        var domain = geo.ToLowerInvariant();
+        var cultureInfo = new CultureInfo(culture);
+        var regionInfo = new RegionInfo(cultureInfo.LCID);
+
+        var domain = regionInfo.TwoLetterISORegionName.ToLowerInvariant();
 
         //while (true)
         //{

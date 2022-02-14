@@ -22,7 +22,7 @@
         <form asp-page="./Keywords" method="get">
             <div class="form-group col-5 mb-2">
                 <div class="input-group">
-                    <input class="form-control" type="text" id="search-keyword" placeholder="Ricerca tra le keyword" />
+                    <input class="form-control" type="text" name="SearchString" value="@Model.CurrentFilter" id="search-keyword" placeholder="Ricerca tra le keyword" />
                     <button type="submit" class="input-group-text btn btn-outline-secondary">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
@@ -50,37 +50,44 @@
         <thead>
             <tr class="table-dark">
                 <th>
-                    <a class="text-light" asp-page="./Keywords" asp-route-sortOrder="@Model.IdSort">
+                    <a class="text-light" asp-page="./Keywords" asp-route-sortOrder="@Model.IdSort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
                         @Html.DisplayNameFor(m => m.Keywords[0].Id)
                     </a>
                 </th>
                 <th>
-                    <a class="text-light" asp-page="./Keywords" asp-route-sortOrder="@Model.ValueSort">
+                    <a class="text-light" asp-page="./Keywords" asp-route-sortOrder="@Model.ValueSort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
                         @Html.DisplayNameFor(m => m.Keywords[0].Value)
                     </a>
                 </th>
                 <th>
-                    <a class="text-light" asp-page="./Keywords" asp-route-sortOrder="@Model.StartingSeedSort">
+                    <a class="text-light" asp-page="./Keywords" asp-route-sortOrder="@Model.StartingSeedSort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
                         Seed di partenza
                     </a>
                 </th>
                 <th>
-                    <a class="text-light" asp-page="./Keywords" asp-route-sortOrder="@Model.CultureSort">
+                    <a class="text-light" asp-page="./Keywords" asp-route-sortOrder="@Model.CultureSort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
                         @Html.DisplayNameFor(m => m.Keywords[0].Culture)
                     </a>
                 </th>
                 <th>
-                    <a class="text-light" asp-page="./Keywords" asp-route-sortOrder="@Model.RankingSort">
+                    <a class="text-light" asp-page="./Keywords" asp-route-sortOrder="@Model.RankingSort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
                         @Html.DisplayNameFor(m => m.Keywords[0].Ranking)
                     </a>
                 </th>
                 <th>
-                    <a class="text-light" asp-page="./Keywords" asp-route-sortOrder="@Model.TimeStampSort">
+                    <a class="text-light" asp-page="./Keywords" asp-route-sortOrder="@Model.TimeStampSort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
                         @Html.DisplayNameFor(m => m.Keywords[0].Timestamp)
                     </a>
                 </th>
                 <th>
-                    <a class="text-light" asp-page="./Keywords" asp-route-sortOrder="@Model.SuggestServiceSort">
+                    <a class="text-light" asp-page="./Keywords" asp-route-sortOrder="@Model.SuggestServiceSort"
+                   asp-route-currentFilter="@Model.CurrentFilter">
                         Servizio di suggest
                     </a>
                 </th>
