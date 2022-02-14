@@ -11,7 +11,7 @@ public class CsvFileReader : ICsvFileReader
     {
         using var reader = new StreamReader(path);
         using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-        var records = csv.GetRecords<KeywordRecord>();
+        var records = csv.GetRecords<KeywordRecord>().ToList();
 
         return records;
     }

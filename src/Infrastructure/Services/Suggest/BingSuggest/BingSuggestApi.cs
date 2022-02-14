@@ -1,12 +1,12 @@
-﻿using MediatR;
+﻿using System.Net;
+using MediatR;
 using Newtonsoft.Json.Linq;
-using System.Net;
 
-namespace Infrastructure.Services.DuckDuckGoSuggest;
+namespace Infrastructure.Services.Suggest.BingSuggest;
 
-public class DuckDuckGoSuggestApi : SuggestApi
+public class BingSuggestApi : SuggestApi
 {
-    public DuckDuckGoSuggestApi(
+    public BingSuggestApi(
         int seedLength,
         IMediator mediator,
         string? filePath = null)
@@ -18,7 +18,7 @@ public class DuckDuckGoSuggestApi : SuggestApi
         using var client = new HttpClient();
 
         var url =
-            $"https://duckduckgo.com/ac/?kl={country}-{language}&q={seed}";
+            $"https://api.bing.com/osjson.aspx?query={seed}&mkt={language}-{country.ToUpperInvariant()}";
 
         using var response = await client.GetAsync(url);
 
@@ -37,12 +37,13 @@ public class DuckDuckGoSuggestApi : SuggestApi
         var res = await response.Content.ReadAsStringAsync();
         var json = JArray.Parse(res);
 
-        suggestions.AddRange(from JObject obj in json
-                             select obj.Property("phrase") into prop
-                             select prop?.Value into token
-                             select token?.Value<string>() into value
-                             where value?.Length <= seedLength
-                             select value);
+        foreach (var values in json)
+        {
+            if (values.HasValues)
+            {
+                suggestions.AddRange(values.Values<string?>().Where(value => value?.Length <= seedLength)!);
+            }
+        }
 
         return suggestions;
     }

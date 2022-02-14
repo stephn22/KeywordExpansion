@@ -1,8 +1,8 @@
-﻿using MediatR;
-using System.Net;
+﻿using System.Net;
 using System.Xml.Linq;
+using MediatR;
 
-namespace Infrastructure.Services.GoogleSuggest;
+namespace Infrastructure.Services.Suggest.GoogleSuggest;
 
 public class GoogleSuggestApi : SuggestApi
 {

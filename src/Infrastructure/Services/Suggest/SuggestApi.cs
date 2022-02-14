@@ -1,14 +1,14 @@
-﻿using Application.Common.Interfaces;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
+using Application.Common.Interfaces;
 using Application.Keywords.Commands.CreateKeyword;
+using Infrastructure.File;
 using Infrastructure.Persistence;
 using Infrastructure.Services.Extensions;
 using MediatR;
-using System.Collections.Concurrent;
-using System.Diagnostics;
-using Infrastructure.File;
 using Microsoft.Extensions.Logging;
 
-namespace Infrastructure.Services;
+namespace Infrastructure.Services.Suggest;
 
 public abstract class SuggestApi : ISuggestApi
 {

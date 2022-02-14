@@ -1,7 +1,7 @@
 {
   "executable": "App",
   "splashscreen": {
-    "imageFile": ""
+    "imageFile": "/wwwroot/pictures/undraw_data_processing_yrrv.svg"
   },
   "name": "App",
   "author": "",

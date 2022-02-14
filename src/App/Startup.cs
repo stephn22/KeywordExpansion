@@ -24,7 +24,7 @@ public class Startup
 
         services.AddSession(options =>
         {
-            options.IdleTimeout = TimeSpan.FromSeconds(10);
+            options.IdleTimeout = TimeSpan.FromSeconds(5);
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
         });
@@ -80,7 +80,7 @@ public class Startup
             MinWidth = 200,
             Center = true,
             Show = false,
-            Icon = Path.GetFullPath("/wwwroot/pictures/graph_up.svg")
+            Icon = "/pictures/graph_up.svg"
         });
 
         await browserWindow.WebContents.Session.ClearCacheAsync();
@@ -90,10 +90,5 @@ public class Startup
         browserWindow.OnReadyToShow += () => browserWindow.Show();
         browserWindow.SetTitle("Keyword Expansion");
         browserWindow.Maximize();
-
-        if (!env.IsDevelopment())
-        {
-            browserWindow.RemoveMenu();
-        }
     }
 }
