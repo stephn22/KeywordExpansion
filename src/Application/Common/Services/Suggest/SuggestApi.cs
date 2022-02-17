@@ -2,13 +2,10 @@
 using System.Diagnostics;
 using Application.Common.Interfaces;
 using Application.Keywords.Commands.CreateKeyword;
-using Infrastructure.File;
-using Infrastructure.Persistence;
-using Infrastructure.Services.Extensions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Infrastructure.Services.Suggest;
+namespace Application.Common.Services.Suggest;
 
 public abstract class SuggestApi : ISuggestApi
 {
@@ -17,19 +14,19 @@ public abstract class SuggestApi : ISuggestApi
     private readonly ParallelOptions _parallelOptions;
     private readonly Stopwatch _requestsStopwatch;
     private int _parallelDegree;
-    private readonly ICsvFileReader _csvFileReader;
+    private readonly ICsvFileReader? _csvFileReader;
     private readonly string _filePath;
     private readonly IMediator _mediator;
     private readonly ILogger<SuggestApi> _logger;
 
-    protected SuggestApi(int seedLength, IMediator mediator, string? filePath = null)
+    protected SuggestApi(int seedLength, IMediator mediator, ICsvFileReader? csvFileReader = default, string? filePath = null)
     {
         _seedLength = seedLength;
         _keywordsBag = new ConcurrentBag<string>();
         _parallelOptions = new ParallelOptions();
         _parallelDegree = 3;
         _requestsStopwatch = new Stopwatch();
-        _csvFileReader = new CsvFileReader();
+        _csvFileReader = csvFileReader;
         _filePath = filePath ?? string.Empty;
         _mediator = mediator;
         _logger = new Logger<SuggestApi>(new LoggerFactory());
@@ -39,7 +36,7 @@ public abstract class SuggestApi : ISuggestApi
 
     public async Task Suggest(int depth)
     {
-        if (!string.IsNullOrEmpty(_filePath))
+        if (!string.IsNullOrEmpty(_filePath) && _csvFileReader != null)
         {
             var records = _csvFileReader.ReadKeywordsFromFile(_filePath);
             
@@ -106,31 +103,25 @@ public abstract class SuggestApi : ISuggestApi
         {
             var suggestions = await GetSuggestions(seed, language, country, _seedLength);
 
-            await Parallel.ForEachAsync(suggestions, _parallelOptions, async (suggestion, cancellationToken) =>
+            foreach (var suggestion in suggestions)
             {
                 if (!_keywordsBag.Contains(suggestion))
                 {
                     _keywordsBag.Add(suggestion);
                     _logger.LogInformation("{@Suggestion}", suggestion);
 
-                    // crea un nuovo dbcontext
-                    var optionsBuilder = ContextExtensions.GetOptionsBuilder();
-                    await using (var context = new ApplicationDbContext(optionsBuilder.Options))
+                    await _mediator.Send(new CreateKeywordCommand
                     {
-                        await _mediator.Send(new CreateKeywordCommand
-                        {
-                            Value = suggestion,
-                            StartingSeed = seed,
-                            Culture = $"{language}-{country}",
-                            Ranking = 0,
-                            SuggestService = GetType().Name,
-                            Context = context
-                        }, cancellationToken);
-                    }
+                        Value = suggestion,
+                        StartingSeed = seed,
+                        Culture = $"{language}-{country}",
+                        Ranking = 0,
+                        SuggestService = GetType().Name,
+                    });
 
                     await GetKeywords(suggestion, language, country, depth - 1);
                 }
-            });
+            }
         }
     }
     public abstract Task<IEnumerable<string>> GetSuggestions(string seed, string language, string country, int seedLength);

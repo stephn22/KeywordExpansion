@@ -1,16 +1,18 @@
 ﻿using System.Net;
+using Application.Common.Interfaces;
 using MediatR;
 using Newtonsoft.Json.Linq;
 
-namespace Infrastructure.Services.Suggest.BingSuggest;
+namespace Application.Common.Services.Suggest.BingSuggest;
 
 public class BingSuggestApi : SuggestApi
 {
     public BingSuggestApi(
         int seedLength,
         IMediator mediator,
+        ICsvFileReader? csvFileReader = default,
         string? filePath = null)
-        : base(seedLength, mediator, filePath)
+        : base(seedLength, mediator, csvFileReader, filePath)
     { }
 
     public override async Task<IEnumerable<string>> GetSuggestions(string seed, string language, string country, int seedLength)

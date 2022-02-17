@@ -1,8 +1,7 @@
-﻿using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace Infrastructure.Services.Extensions;
+namespace Infrastructure.Persistence.Extensions;
 
 public static class ContextExtensions
 {

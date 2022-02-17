@@ -1,5 +1,4 @@
-﻿using Application.Common.Interfaces;
-using Application.Common.Services.BingAds;
+﻿using Application.Common.Services.BingAds;
 using Application.Keywords.Commands.UpdateKeyword;
 using Application.Keywords.Queries.GetKeywords;
 using MediatR;

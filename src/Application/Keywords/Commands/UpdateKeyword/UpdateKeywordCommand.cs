@@ -14,6 +14,7 @@ public class UpdateKeywordCommand : IRequest
     public int Ranking { get; set; }
     public DateTime Timestamp { get; set; }
     public string SuggestService { get; set; }
+    public IApplicationDbContext? Context { get; set; }    
 }
 
 public class UpdateKeywordCommandHandler : IRequestHandler<UpdateKeywordCommand>
@@ -41,7 +42,14 @@ public class UpdateKeywordCommandHandler : IRequestHandler<UpdateKeywordCommand>
         entity.Timestamp = request.Timestamp;
         entity.SuggestService = request.SuggestService;
 
-        await _context.SaveChangesAsync(cancellationToken);
+        if (request.Context != null)
+        {
+            await request.Context.SaveChangesAsync(cancellationToken);
+        }
+        else
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+        }
 
         return Unit.Value;
     }

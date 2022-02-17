@@ -1,13 +1,13 @@
-﻿using Application.Keywords.Commands.CreateKeyword;
-using Infrastructure.Services.Extensions;
+﻿using Application.Common.Services.Extensions;
+using Application.Keywords.Commands.CreateKeyword;
 using MediatR;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Edge;
+using OpenQA.Selenium.Support.UI;
 using System.Collections.Concurrent;
 using System.Globalization;
-using OpenQA.Selenium.Support.UI;
 
-namespace Infrastructure.Services.Driver.Extensions;
+namespace Application.Common.Services.Driver.Extensions;
 
 public static class ChromiumDriverExtensions
 {

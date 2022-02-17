@@ -1,11 +1,12 @@
 using App.Services;
+using Application.Common.Services.Suggest.BingSuggest;
+using Application.Common.Services.Suggest.DuckDuckGoSuggest;
+using Application.Common.Services.Suggest.GoogleSuggest;
 using Application.Common.Services.Util;
 using Domain.Constants;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
-using Infrastructure.Services.Suggest.BingSuggest;
-using Infrastructure.Services.Suggest.DuckDuckGoSuggest;
-using Infrastructure.Services.Suggest.GoogleSuggest;
+using Infrastructure.File;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -65,6 +66,7 @@ public class SuggestModel : PageModel
                     _configuration["WebShare:ProxyAddress"],
                     KeywordConstants.MaxLength,
                     _mediator,
+                    new CsvFileReader(),
                     path);
 
                 if (!string.IsNullOrEmpty(Input.Keyword))
@@ -85,6 +87,7 @@ public class SuggestModel : PageModel
                 var suggestApiBing = new BingSuggestApi(
                     KeywordConstants.MaxLength,
                     _mediator,
+                    new CsvFileReader(),
                     path);
 
                 if (!string.IsNullOrEmpty(Input.Keyword))
@@ -104,6 +107,7 @@ public class SuggestModel : PageModel
                 var suggestApiDuckDuckGo = new DuckDuckGoSuggestApi(
                     KeywordConstants.MaxLength,
                     _mediator,
+                    new CsvFileReader(),
                     path);
 
                 if (!string.IsNullOrEmpty(Input.Keyword))

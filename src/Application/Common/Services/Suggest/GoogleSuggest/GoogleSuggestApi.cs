@@ -1,8 +1,9 @@
 ﻿using System.Net;
 using System.Xml.Linq;
+using Application.Common.Interfaces;
 using MediatR;
 
-namespace Infrastructure.Services.Suggest.GoogleSuggest;
+namespace Application.Common.Services.Suggest.GoogleSuggest;
 
 public class GoogleSuggestApi : SuggestApi
 {
@@ -16,8 +17,9 @@ public class GoogleSuggestApi : SuggestApi
         string proxyAddress,
         int seedLength,
         IMediator mediator,
+        ICsvFileReader? csvFileReader = default,
         string? filePath = null)
-        : base(seedLength, mediator, filePath)
+        : base(seedLength, mediator, csvFileReader, filePath)
     {
         _username = username;
         _password = password;
