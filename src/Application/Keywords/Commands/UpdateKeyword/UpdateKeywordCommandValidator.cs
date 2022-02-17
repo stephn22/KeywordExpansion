@@ -9,10 +9,10 @@ public class UpdateKeywordCommandValidator : AbstractValidator<UpdateKeywordComm
     {
         RuleFor(k => k.Value)
             .MaximumLength(KeywordConstants.MaxLength);
-            //.NotEmpty();
+        //.NotEmpty();
 
-            RuleFor(k => k.StartingSeed)
-                .MaximumLength(KeywordConstants.MaxLength);
+        RuleFor(k => k.StartingSeed)
+            .MaximumLength(KeywordConstants.MaxLength);
 
         RuleFor(k => k.Ranking)
             .GreaterThanOrEqualTo(0);

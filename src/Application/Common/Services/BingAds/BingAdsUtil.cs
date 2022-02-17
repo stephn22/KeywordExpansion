@@ -1,7 +1,7 @@
-﻿using System.Text.RegularExpressions;
-using Domain.Entities;
+﻿using Domain.Entities;
 using HtmlAgilityPack;
 using Nager.PublicSuffix;
+using System.Text.RegularExpressions;
 
 namespace Application.Common.Services.BingAds;
 

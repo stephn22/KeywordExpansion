@@ -16,7 +16,7 @@ public class CreateKeywordCommandHandler : IRequestHandler<CreateKeywordCommand,
 {
     private readonly IApplicationDbContext _context;
     private readonly IDateTime _dateTime;
-    public CreateKeywordCommandHandler(IApplicationDbContext context,IDateTime dateTime)
+    public CreateKeywordCommandHandler(IApplicationDbContext context, IDateTime dateTime)
     {
         _context = context;
         _dateTime = dateTime;

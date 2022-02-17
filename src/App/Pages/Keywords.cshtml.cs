@@ -4,13 +4,12 @@ using Application.Keywords.Queries.ExportKeywords;
 using Application.Keywords.Queries.GetKeywords;
 using Application.Keywords.Queries.RankKeywords;
 using Domain.Entities;
+using ElectronNET.API;
+using ElectronNET.API.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using System;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
 
 namespace App.Pages;
 

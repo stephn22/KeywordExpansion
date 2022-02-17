@@ -1,9 +1,9 @@
-﻿using System.Collections.Concurrent;
-using System.Diagnostics;
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using Application.Keywords.Commands.CreateKeyword;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System.Collections.Concurrent;
+using System.Diagnostics;
 
 namespace Application.Common.Services.Suggest;
 
@@ -39,7 +39,7 @@ public abstract class SuggestApi : ISuggestApi
         if (!string.IsNullOrEmpty(_filePath) && _csvFileReader != null)
         {
             var records = _csvFileReader.ReadKeywordsFromFile(_filePath);
-            
+
             _requestsStopwatch.Start();
 
             await Parallel.ForEachAsync(records, _parallelOptions, async (record, cancellationToken) =>
