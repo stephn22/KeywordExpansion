@@ -3,6 +3,8 @@ using ElectronNET.API;
 using ElectronNET.API.Entities;
 using FluentValidation.AspNetCore;
 using Infrastructure;
+using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace App;
 
@@ -52,6 +54,12 @@ public class Startup
         {
             app.UseExceptionHandler("/Error");
             app.UseHsts();
+        }
+
+        using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope())
+        {
+            var context = serviceScope?.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            context?.Database.Migrate();
         }
 
         app.UseHttpsRedirection();
