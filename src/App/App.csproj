@@ -15,7 +15,7 @@
 	<ItemGroup>
 		<PackageReference Include="ElectronNET.API" Version="13.5.1" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="10.3.6" />
-		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.10" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.2">
 			<PrivateAssets>all</PrivateAssets>
